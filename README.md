@@ -9,7 +9,6 @@ Predefined services for Angular.js to make integrating with Graphite simple, qui
 
 **Server Configuration**
  - Environment(s)
- -
 
 **Metric Search**
  - Enable find all metrics
