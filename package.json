@@ -1,0 +1,33 @@
+{
+  "name": "angularjs-graphite",
+  "version": "0.0.0",
+  "description": "Predefined services for Angular.js to make integrating with Graphite simple, quick, & effective",
+  "main": "angular-graphite.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cmaurer/angularjs-graphite"
+  },
+  "keywords": [
+    "Angular.js",
+    "angular",
+    "Graphite"
+  ],
+  "author": "Christian Maurer",
+  "license": "Apache License, v2.0",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-jsdoc": "~0.2.4",
+    "grunt-contrib-watch": "~0.3.1",
+    "grunt-contrib-concat": "~0.1.3",
+    "grunt-contrib-uglify": "~0.1.2",
+    "grunt-angular-templates": "~0.3.0",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-jasmine": "~0.3.3",
+    "grunt-contrib-jshint": "~0.5.4"
+  },
+  "readmeFilename": "README.md",
+  "gitHead": "05b743feda9c1c30c9072d4158eb37fe76893675"
+}

@@ -3,10 +3,11 @@ angularjs-graphite
 
 Predefined services for Angular.js to make integrating with Graphite simple, quick, & effective
 
-
 ## Design Thoughts
 
 **Server Configuration**
+ - Environment(s)
+ -
 
 **Metric Search**
  - Enable find all metrics
@@ -19,14 +20,17 @@ Predefined services for Angular.js to make integrating with Graphite simple, qui
 
 **Render API Facade**
 
-**Aggregation**
+**Aggregation, Parallelization, Routing**
+ - Route requests to specific servers for improved performance
+ - Parallelize requests
+ - Aggregate responses into combined format
 
 **Caching**
 
 **Promises, Promises**
 _yeah, Im a child of the 80's_
 
-**Enable composing Metric Urls easier**
+**Enable composition of Metric Urls easier**
  - writing dashboards, apps can get really hairy with a lot of urls.
  - Is there an angular way to minimize the nastiness of url-bloat?
 
