@@ -3,6 +3,8 @@ angularjs-graphite
 
 Predefined services for Angular.js to make integrating with Graphite simple, quick, & effective
 
+[![Build Status](https://travis-ci.org/cmaurer/angularjs-graphite.png?branch=master)](https://travis-ci.org/cmaurer/angularjs-graphite)
+
 ## Design Thoughts
 
 **Server Configuration**
