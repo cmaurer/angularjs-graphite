@@ -24,7 +24,8 @@ module.exports = function (grunt) {
     },
     jshint: {
       options: {
-        jshintrc: true
+        jshintrc: true,
+        force: true
       },
       afterconcat: ['dist/angularjs-graphite.js'],
     },
