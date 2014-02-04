@@ -18,7 +18,7 @@ module.exports = function (grunt) {
         stripBanners: true
       },
       js: {
-        src: ['src/namespace.js'],
+        src: ['src/namespace.js', 'src/providers/graphite-api-provider.js'],
         dest: 'dist/<%= pkg.name %>.js'
       }
     },
@@ -27,7 +27,17 @@ module.exports = function (grunt) {
         jshintrc: true,
         force: true
       },
-      afterconcat: ['dist/angularjs-graphite.js'],
+      afterconcat: ['dist/angularjs-graphite.js']
+    },
+    karma: {
+      unit: {
+        configFile: 'karma-unit.js'
+      },
+      continuous: {
+        configFile: 'karma-unit.js',
+        singleRun: true,
+        browsers: ['PhantomJS']
+      }
     },
     jsbeautifier : {
       files : ['dist/angularjs-graphite.js'],
@@ -50,8 +60,11 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-jsbeautifier');
+  grunt.loadNpmTasks('grunt-contrib-jasmine');
+  grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks('karma-coverage');
 
   // Default task.
-  grunt.registerTask('default', ['clean', 'concat', 'jsbeautifier', 'jshint']);
+  grunt.registerTask('default', ['clean', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous']);
 
 };
