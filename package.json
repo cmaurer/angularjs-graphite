@@ -41,7 +41,9 @@
     "karma": "~0.10.9",
     "grunt-karma": "~0.6.2",
     "phantomjs": "~1.9.7-1",
-    "karma-coverage": "~0.1.5"
+    "karma-coverage": "~0.1.5",
+    "coveralls": "~2.7.1",
+    "grunt-karma-coveralls": "~2.3.0"
   },
   "readmeFilename": "README.md",
   "gitHead": "05b743feda9c1c30c9072d4158eb37fe76893675"

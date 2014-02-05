@@ -13,9 +13,15 @@ module.exports = function ( karma ) {
     plugins: [ 'karma-jasmine', 'karma-coverage', 'karma-phantomjs-launcher'],
     logLevel:  'DEBUG',
     reporters: ['dots', 'coverage'],
+    preprocessors: {
+      // source files, that you wanna generate coverage for
+      // do not include tests or libraries
+      // (these files will be instrumented by Istanbul)
+      'src/**/*.js': ['coverage']
+    },
     coverageReporter: {
-      type : 'html',
-      dir : 'coverage/'
+      type: 'lcov',
+      dir: 'coverage/'
     },
     port: 7019,
     urlRoot: '/',

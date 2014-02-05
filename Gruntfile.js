@@ -11,7 +11,7 @@ module.exports = function (grunt) {
       '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
       ' Licensed <%= pkg.license %> */\n',
     // Task configuration.
-    clean: ['dist/'],
+    clean: ['dist/', 'coverage/'],
     concat: {
       options: {
         banner: '<%= banner %>',
@@ -39,6 +39,12 @@ module.exports = function (grunt) {
         browsers: ['PhantomJS']
       }
     },
+    coveralls: {
+      options: {
+        debug: true,
+        coverage_dir: 'coverage/'
+      }
+    },
     jsbeautifier : {
       files : ['dist/angularjs-graphite.js'],
       options : {
@@ -63,6 +69,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('karma-coverage');
+  grunt.loadNpmTasks('grunt-karma-coveralls');
 
   // Default task.
   grunt.registerTask('default', ['clean', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous']);
