@@ -12,6 +12,7 @@ Connecting to a graphite instance should involve
  - configuring the httpProvider
  - identifying the graphite protocol to use (raw, json, csv, pickle, etc)
  - configuring the http transformers (in and out)
+ - provide functionality to manipulate dates
 
 How to handle the following?
 
