@@ -73,5 +73,6 @@ module.exports = function (grunt) {
 
   // Default task.
   grunt.registerTask('default', ['clean', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous']);
+  grunt.registerTask('travis', ['clean', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous', 'coveralls']);
 
 };
