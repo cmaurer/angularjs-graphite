@@ -25,12 +25,16 @@ ngGraphiteProviders.provider('apiProvider', {
       if(cfg.transformResponse){
         this.httpConfig.transformResponse = cfg.transformResponse;
       }
+
+      //{boolean|Cache}
       if(cfg.cache){
-        this.httpConfig.cache = cfg.cache;
+          this.httpConfig.cache = cfg.cache;
       }
+      //{number|Promise}
       if(cfg.timeout){
         this.httpConfig.timeout = cfg.timeout;
       }
+      //{boolean}
       if(cfg.withCredentials){
         this.httpConfig.withCredentials = cfg.withCredentials;
       }

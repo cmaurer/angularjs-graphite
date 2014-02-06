@@ -41,6 +41,17 @@ Repetitively creating target urls, where the only thing that typically changes i
 
 How can it be abstracted out to something less repetitive?
 
+API URL Builder
+Given a set of servers, formulas, build the corresponding url's
+
+**Incremental Query**
+ - Ability to cache results and only query a smaller amount of time
+ - For example
+    for a multi-time period query, cache the results from the first request
+    on subsequent requests, only query for the last n-period(s) of time
+    combine the results back into one complete result
+
+The goal is to reduce the number of calls to graphite.
 
 **Aggregation, Parallelization, Routing**
  - Route requests to specific servers for improved performance
@@ -59,3 +70,8 @@ _yeah, Im a child of the 80's_
 
 **Testing**
  - test the heck out of it.
+
+**Distribute new metrics using events**
+
+
+
