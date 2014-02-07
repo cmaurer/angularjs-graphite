@@ -1,45 +1,35 @@
-ngGraphiteProviders.provider('apiProvider', {
+ngGraphiteProviders.provider('apiProvider', function(){
+  'use strict';
+  var httpConfig = {}, providerConfig = {targets:''};
 
-  httpConfig: {}, providerConfig: {targets:''},
-
-  config: function (cfg) {
-    'use strict';
+  this.config = function (cfg) {
     if(cfg){
       //GET, POST, PUT, etc
       if(cfg.method){
-        this.httpConfig.method = cfg.method;
+        httpConfig.method = cfg.method;
       }
-      //url – {string} – Absolute or relative URL of the resource that is being requested.
-//      if(cfg.url){
-//        this.httpConfig.url = cfg.url;
-//      }
-//      if(cfg.params){
-//        this.httpConfig.params = cfg.params;
-//      }
-//      if(cfg.data){
-//        this.httpConfig.data = cfg.data;
-//      }
+
       if(cfg.transformRequest){
-        this.httpConfig.transformRequest = cfg.transformRequest;
+        httpConfig.transformRequest = cfg.transformRequest;
       }
       if(cfg.transformResponse){
-        this.httpConfig.transformResponse = cfg.transformResponse;
+        httpConfig.transformResponse = cfg.transformResponse;
       }
 
       //{boolean|Cache}
       if(cfg.cache){
-          this.httpConfig.cache = cfg.cache;
+        httpConfig.cache = cfg.cache;
       }
       //{number|Promise}
       if(cfg.timeout){
-        this.httpConfig.timeout = cfg.timeout;
+        httpConfig.timeout = cfg.timeout;
       }
       //{boolean}
       if(cfg.withCredentials){
-        this.httpConfig.withCredentials = cfg.withCredentials;
+        httpConfig.withCredentials = cfg.withCredentials;
       }
       if(cfg.baseUrl){
-        this.providerConfig.baseUrl = cfg.baseUrl.replace(/\/$/, '');
+        providerConfig.baseUrl = cfg.baseUrl.replace(/\/$/, '');
       }
       //{string | object | array}
       if(cfg.targets){
@@ -52,44 +42,47 @@ ngGraphiteProviders.provider('apiProvider', {
         } else {
           tgt = 'target=' + cfg.targets;
         }
-        this.providerConfig.targets = tgt;
+        providerConfig.targets = tgt;
       }
       if(cfg.from){
-        this.providerConfig.from = cfg.from;
+        providerConfig.from = cfg.from;
       }
       if(cfg.until){
-        this.providerConfig.until = cfg.until;
+        providerConfig.until = cfg.until;
       }
       //string: raw, csv, json, pickle
       if(cfg.format){
-        this.providerConfig.format = cfg.format;
+        providerConfig.format = cfg.format;
       }
     }
-  },
-  getHttpConfig: function () {
-    'use strict';
-    return this.httpConfig;
-  },
-  getProviderConfig: function () {
-    'use strict';
-    return this.providerConfig;
-  },
-  createGraphiteUrl: function(){
-    'use strict';
+  };
+
+  this.getHttpConfig = function () {
+    return httpConfig;
+  };
+
+  this.getProviderConfig = function () {
+    return providerConfig;
+  };
+
+  this.createGraphiteUrl = function() {
     //convert providerConfig into $http.params
     //url + /render?target=
-    this.httpConfig.url = this.providerConfig.baseUrl + '/render?' + this.providerConfig.targets + '&from=' + this.providerConfig.from + '&until=' + this.providerConfig.until + '&format=' + this.providerConfig.format;
-    return this.httpConfig.url;
-  },
-  $get: function ($http) {
-    'use strict';
-    return {
+    httpConfig.url = providerConfig.baseUrl + '/render?' + providerConfig.targets + '&from=' + providerConfig.from + '&until=' + providerConfig.until + '&format=' + providerConfig.format;
+    return httpConfig.url;
+  };
 
-      getData: function () {
-        this.createGraphiteUrl();
-        return $http(this.httpConfig);
-      }
+  this.getData = function($http){
+    this.createGraphiteUrl();
+    return $http(httpConfig);
+  };
 
-    };
-  }
+  this.$get = function($http){
+    return this.getData($http);
+  };
+
+//  this.$get = ['$http', function ($http) {
+//      createGraphiteUrl();
+//      return $http(httpConfig);
+//  }]
 });

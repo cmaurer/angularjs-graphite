@@ -70,5 +70,22 @@ describe('Graphite API Provider', function(){
   }));
 
 
+});
+
+/*
+describe('Graphite API $http Service Provider', function(){
+
+  var p, getSpy, responseData = [{ "target": "entries", "datapoints": [ [1.0, 1311836008], [2.0, 1311836009], [3.0, 1311836010], [5.0, 1311836011], [6.0, 1311836012]] }];
+
+  beforeEach(module('ngGraphite.providers', function(apiProviderProvider){
+    p = apiProviderProvider;
+  }));
+
+  it('should make call to graphite service', inject(function($http){
+    p.config({baseUrl:'http://localhost', targets:'target.one', from:'-2min', until:'now', format: 'json'});
+    p.$get();
+
+  }));
 
 });
+*/

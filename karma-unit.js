@@ -4,9 +4,9 @@ module.exports = function ( karma ) {
   karma.set({
     basePath: '.',
     files: [
-      "http://code.angularjs.org/1.2.10/angular.js",
-      "http://code.angularjs.org/1.2.10/angular-mocks.js",
-      "src/**/*.js",
+      "http://code.angularjs.org/1.2.11/angular.js",
+      "http://code.angularjs.org/1.2.11/angular-mocks.js",
+      "dist/*.js",
       "test/**/*spec.js"
     ],
     frameworks: [ 'jasmine' ],

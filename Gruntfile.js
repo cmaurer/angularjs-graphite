@@ -18,7 +18,11 @@ module.exports = function (grunt) {
         stripBanners: true
       },
       js: {
-        src: ['src/namespace.js', 'src/providers/graphite-api-provider.js'],
+        src: [
+          'src/namespace.js',
+          'src/providers/graphite-api-provider.js',
+          'src/factories/graphite-api-format-factory.js'
+        ],
         dest: 'dist/<%= pkg.name %>.js'
       }
     },
