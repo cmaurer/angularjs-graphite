@@ -6,7 +6,9 @@ module.exports = function ( karma ) {
     files: [
       "http://code.angularjs.org/1.2.11/angular.js",
       "http://code.angularjs.org/1.2.11/angular-mocks.js",
-      "dist/*.js",
+      "src/namespace.js",
+      "src/factories/graphite-api-format-factory.js",
+      "src/providers/graphite-api-provider.js",
       "test/**/*spec.js"
     ],
     frameworks: [ 'jasmine' ],
