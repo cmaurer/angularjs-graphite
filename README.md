@@ -76,3 +76,7 @@ _yeah, Im a child of the 80's_
 
 
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/cmaurer/angularjs-graphite/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
