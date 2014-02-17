@@ -41,7 +41,7 @@
     "karma": "~0.10.9",
     "grunt-karma": "~0.6.2",
     "phantomjs": "~1.9.7-1",
-    "karma-coverage": "~0.1.5",
+    "karma-coverage": "~0.2.0",
     "coveralls": "~2.8.0",
     "grunt-karma-coveralls": "~2.3.0"
   },
