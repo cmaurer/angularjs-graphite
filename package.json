@@ -43,7 +43,8 @@
     "phantomjs": "~1.9.7-1",
     "karma-coverage": "~0.2.0",
     "coveralls": "~2.8.0",
-    "grunt-karma-coveralls": "~2.3.0"
+    "grunt-karma-coveralls": "~2.3.0",
+    "grunt-ngdocs": "~0.2.1"
   },
   "readmeFilename": "README.md",
   "gitHead": "05b743feda9c1c30c9072d4158eb37fe76893675"

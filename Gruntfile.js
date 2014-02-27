@@ -11,7 +11,7 @@ module.exports = function (grunt) {
       '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
       ' Licensed <%= pkg.license %> */\n',
     // Task configuration.
-    clean: ['dist/', 'coverage/'],
+    clean: ['dist/', 'coverage/', 'docs/'],
     concat: {
       options: {
         banner: '<%= banner %>',
@@ -61,7 +61,17 @@ module.exports = function (grunt) {
           indentLevel: 0
         }
       }
+    },
+    ngdocs: {
+      options: {
+        dest: 'docs',
+        scripts: ['angular.js']
+      },
+      targets:{
+        src: ['src/**/*.js']
+      }
     }
+
   });
 
   // These plugins provide necessary tasks.
@@ -74,9 +84,11 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('karma-coverage');
   grunt.loadNpmTasks('grunt-karma-coveralls');
+  grunt.loadNpmTasks('grunt-ngdocs');
 
   // Default task.
   grunt.registerTask('default', ['clean', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous']);
+  grunt.registerTask('docs', ['clean', 'concat', 'ngdocs']);
   grunt.registerTask('travis', ['clean', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous', 'coveralls']);
 
 };
