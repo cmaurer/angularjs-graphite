@@ -72,6 +72,9 @@ _yeah, Im a child of the 80's_
 
 **Testing**
  - test the heck out of it.
+ - implement $httpBackend that emits graphite metrics
+ - mock graphite service
+
 
 **Distribute new metrics using events**
 
