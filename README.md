@@ -69,6 +69,14 @@ _yeah, Im a child of the 80's_
 **Enable composition of Metric Urls easier**
  - writing dashboards, apps can get really hairy with a lot of urls.
  - Is there an angular way to minimize the nastiness of url-bloat?
+ - Build metrics given metadata, regex, patterns, template, configuration, etc
+
+**something like**
+>server{0-5}.procfs.loadavg.OneMinute -> server0.procfs.loadavg.OneMinute, server1.procfs.loadavg.OneMinute, server2.procfs.loadavg.OneMinute, server3.procfs.loadavg.OneMinute, server4.procfs.loadavg.OneMinute, server5.procfs.loadavg.OneMinute
+>server{0-5}.{pdc|sdc}.procfs.loadavg.OneMinute ->
+>             server0.pdc.procfs.loadavg.OneMinute, server1.pdc.procfs.loadavg.OneMinute, server2.pdc.procfs.loadavg.OneMinute, server3.pdc.procfs.loadavg.OneMinute, server4.pdc.procfs.loadavg.OneMinute, server5.pdc.procfs.loadavg.OneMinute
+>             server0.sdc.procfs.loadavg.OneMinute, server1.sdc.procfs.loadavg.OneMinute, server2.sdc.procfs.loadavg.OneMinute, server3.sdc.procfs.loadavg.OneMinute, server4.sdc.procfs.loadavg.OneMinute, server4.sdc.procfs.loadavg.OneMinute
+
 
 **Testing**
  - test the heck out of it.
