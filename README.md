@@ -24,6 +24,8 @@ Predefined services for Angular.js to make integrating with Graphite simple, qui
 
 **Time Facade**
   - Expand time formatting beyond the api that graphite exposes
+  - 'HH:mm_YYYYMMDD'
+
 
 **Render API Facade**
 

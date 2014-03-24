@@ -1,6 +1,6 @@
-ngGraphiteProviders.provider('apiProvider', function(){
+ngGraphiteProviders.provider('graphiteApi', function(){
   'use strict';
-  var httpConfig = {}, providerConfig = {targets:''};
+  var httpConfig = {}, providerConfig = {targets:''}, __$http__;
 
   this.config = function (cfg) {
     if(cfg){
@@ -65,6 +65,7 @@ ngGraphiteProviders.provider('apiProvider', function(){
     return providerConfig;
   };
 
+  //todo: refactor to createRender?
   this.createGraphiteUrl = function() {
     //convert providerConfig into $http.params
     //url + /render?target=
@@ -72,14 +73,14 @@ ngGraphiteProviders.provider('apiProvider', function(){
     return httpConfig.url;
   };
 
-  this.getData = function($http){
-    this.createGraphiteUrl();
-    return $http(httpConfig);
-  };
+  this.$get = ['$http', function($http){
+    return {
+      getData: function(){
+        return $http();
+      }
+    }
 
-  this.$get = function($http){
-    return this.getData($http);
-  };
+  }];
 
 //  this.$get = ['$http', function ($http) {
 //      createGraphiteUrl();

@@ -14,6 +14,7 @@
   "newcap": true,
   "noarg": true,
   "unused": "vars",
+  "undef": true,
   "strict": true,
   "smarttabs": true,
   "predef": [

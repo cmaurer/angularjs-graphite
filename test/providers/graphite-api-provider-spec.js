@@ -2,8 +2,8 @@ describe('Graphite API Provider', function(){
 
   var p;
 
-  beforeEach(module('ngGraphite.providers', function(apiProviderProvider){
-    p = apiProviderProvider;
+  beforeEach(module('ngGraphite.providers', function(graphiteApiProvider){
+    p = graphiteApiProvider;
   }));
 
   afterEach(function () {
@@ -72,20 +72,40 @@ describe('Graphite API Provider', function(){
 
 });
 
-/*
 describe('Graphite API $http Service Provider', function(){
+  'use strict';
 
-  var p, getSpy, responseData = [{ "target": "entries", "datapoints": [ [1.0, 1311836008], [2.0, 1311836009], [3.0, 1311836010], [5.0, 1311836011], [6.0, 1311836012]] }];
+  describe('when calling getData', function () {
 
-  beforeEach(module('ngGraphite.providers', function(apiProviderProvider){
-    p = apiProviderProvider;
-  }));
+    var p, _$http, _$httpBackend;
 
-  it('should make call to graphite service', inject(function($http){
-    p.config({baseUrl:'http://localhost', targets:'target.one', from:'-2min', until:'now', format: 'json'});
-    p.$get();
+    beforeEach(module('ngGraphite.providers', function(graphiteApiProvider){
+      p = graphiteApiProvider;
+    }));
 
-  }));
+    beforeEach(inject(function ($http, $httpBackend) {
+      _$http = $http;
+      _$httpBackend = $httpBackend
+    }));
+
+    afterEach(function() {
+      _$httpBackend.verifyNoOutstandingExpectation();
+      _$httpBackend.verifyNoOutstandingRequest();
+    });
+
+
+    it('should return graphite data', function(){
+      expect(p).toBeDefined();
+
+//      _$httpBackend.expect('GET', '/render?target=target.one&target=target.two&from=-2min&until=now&format=json')
+//        .respond([{}]);
+
+//      p.config({baseUrl:'http://localhost', targets:['target.one', 'target.two'], from:'-2min', until:'now', format: 'json'});
+//      p.getData();
+
+//      _$httpBackend.flush();
+
+    });
+  });
 
 });
-*/

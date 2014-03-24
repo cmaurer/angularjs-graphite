@@ -11,7 +11,19 @@ module.exports = function (grunt) {
       '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
       ' Licensed <%= pkg.license %> */\n',
     // Task configuration.
-    clean: ['dist/', 'coverage/', 'docs/'],
+    clean: ['dist/', 'coverage/', 'docs/', 'generated/'],
+    ngmin: {
+      directives: {
+        expand: true,
+        cwd: 'src',
+        src: [
+          'factories/graphite-api-format-factory.js',
+          'providers/graphite-api-provider.js',
+          'services/graphite-find-service.js'
+        ],
+        dest: 'generated'
+      }
+    },
     concat: {
       options: {
         banner: '<%= banner %>',
@@ -20,8 +32,9 @@ module.exports = function (grunt) {
       js: {
         src: [
           'src/namespace.js',
-          'src/providers/graphite-api-provider.js',
-          'src/factories/graphite-api-format-factory.js'
+          'generated/providers/graphite-api-provider.js',
+          'generated/factories/graphite-api-format-factory.js',
+          'generated/services/graphite-find-service.js'
         ],
         dest: 'dist/<%= pkg.name %>.js'
       }
@@ -62,6 +75,22 @@ module.exports = function (grunt) {
         }
       }
     },
+    uglify: {
+      options: {
+        mangle: false
+      },
+      min: {
+        files: {
+          'dist/angularjs-graphite.min.js': ['dist/angularjs-graphite.js']
+        }
+      }
+    },
+    changelog: {
+      options: {
+        after: '2014-01-01',
+        fixRegex: /^(.*)$/gim
+      }
+    },
     ngdocs: {
       options: {
         dest: 'docs',
@@ -79,15 +108,17 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-jsbeautifier');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-karma');
-  grunt.loadNpmTasks('karma-coverage');
   grunt.loadNpmTasks('grunt-karma-coveralls');
   grunt.loadNpmTasks('grunt-ngdocs');
+  grunt.loadNpmTasks('grunt-changelog');
+  grunt.loadNpmTasks('grunt-ngmin');
 
   // Default task.
-  grunt.registerTask('default', ['clean', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous']);
+  grunt.registerTask('default', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous', 'uglify', 'ngmin']);
   grunt.registerTask('docs', ['clean', 'concat', 'ngdocs']);
   grunt.registerTask('travis', ['clean', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous', 'coveralls']);
 
