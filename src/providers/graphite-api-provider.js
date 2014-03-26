@@ -1,35 +1,87 @@
-ngGraphiteProviders.provider('graphiteApi', function(){
-  'use strict';
-  var httpConfig = {}, providerConfig = {targets:''}, __$http__;
+/*
+ render url parameters
+ formatTypes = ['raw', 'json', 'csv', 'png', 'pickle', 'svg'],
+ providerOptions = {
+ targets:[],
+ format: formatTypes[0],
+ from: '-24h',
+ areaAlpha: null,
+ areaMode: null, //none, first, all, stacked
+ bgcolor: null,
+ cacheTimeout: null,
+ colorList: null,
+ drawNullAsZero: null,
+ fgcolor: null,
+ fontBold: null,
+ fontItalic: null,
+ fontName: null,
+ fontSize: null,
+ graphOnly: null,
+ graphiteType: null, //line, pie
+ hideLegend: null,
+ hideAxes: null,
+ hideYAxis: null,
+ hideGrid: null,
+ height: null,
+ jsonp: null,
+ leftColor: null,
+ leftDashed: null,
+ leftWidth: null,
+ lineMode: null, //slope, staircase, connected
+ lineWidth: null,
+ logBase: null,
+ localOnly: null,
+ majorGridLineColor: null,
+ margin: null,
+ max: null,
+ maxDataPoints: null,
+ minorGridLineColor: null,
+ minorY: null,
+ min: null,
+ minXStep: null,
+ noCache: null,
+ pieMode: null, //average, maximum, minimum
+ rightColor: null,
+ rightDashed: null,
+ rightWidth: null,
+ template: null,
+ thickness: null,
+ tite: null,
+ tz: null, //'America/Los_Angeles', 'UTC'
+ uniqueLegend: null,
+ until: 'now',
+ vtitle: null,
+ vtitleRight: null,
+ width: null,
+ xFormat: null,
+ yAxisSide: null,
+ yDivisor: null,
+ yLimit: null,
+ yLimitLeft: null,
+ yLimitRight: null,
+ yMin: null,
+ yMax: null,
+ yMaxLeft: null,
+ yMaxRight: null,
+ yMinLeft: null,
+ yMinRight: null,
+ yStep: null,
+ yStepLeft: null,
+ yStepRight: null,
+ yUnitSystem: null //si, binary, none
+ */
+
+/**
+ * @ngdoc provider
+ */
+ngGraphiteProviders.provider('graphite', function(){
+
+  var httpConfig = {};
 
   this.config = function (cfg) {
     if(cfg){
-      //GET, POST, PUT, etc
-      if(cfg.method){
-        httpConfig.method = cfg.method;
-      }
-
-      if(cfg.transformRequest){
-        httpConfig.transformRequest = cfg.transformRequest;
-      }
-      if(cfg.transformResponse){
-        httpConfig.transformResponse = cfg.transformResponse;
-      }
-
-      //{boolean|Cache}
-      if(cfg.cache){
-        httpConfig.cache = cfg.cache;
-      }
-      //{number|Promise}
-      if(cfg.timeout){
-        httpConfig.timeout = cfg.timeout;
-      }
-      //{boolean}
-      if(cfg.withCredentials){
-        httpConfig.withCredentials = cfg.withCredentials;
-      }
       if(cfg.baseUrl){
-        providerConfig.baseUrl = cfg.baseUrl.replace(/\/$/, '');
+        this.options.baseUrl = cfg.baseUrl.replace(/\/$/, '');
       }
       //{string | object | array}
       if(cfg.targets){
@@ -42,17 +94,44 @@ ngGraphiteProviders.provider('graphiteApi', function(){
         } else {
           tgt = 'target=' + cfg.targets;
         }
-        providerConfig.targets = tgt;
+        this.options.targets = tgt;
       }
       if(cfg.from){
-        providerConfig.from = cfg.from;
+        this.options.from = cfg.from;
       }
       if(cfg.until){
-        providerConfig.until = cfg.until;
+        this.options.until = cfg.until;
       }
       //string: raw, csv, json, pickle
       if(cfg.format){
-        providerConfig.format = cfg.format;
+        this.options.format = cfg.format;
+      }
+    }
+  };
+
+  this.httpConfig = function(cfg){
+    if(cfg){
+      //GET, POST, PUT, etc
+      if(cfg.method){
+        httpConfig.method = cfg.method;
+      }
+      if(cfg.transformRequest){
+        httpConfig.transformRequest = cfg.transformRequest;
+      }
+      if(cfg.transformResponse){
+        httpConfig.transformResponse = cfg.transformResponse;
+      }
+      //{boolean|Cache}
+      if(cfg.cache){
+        httpConfig.cache = cfg.cache;
+      }
+      //{number|Promise}
+      if(cfg.timeout){
+        httpConfig.timeout = cfg.timeout;
+      }
+      //{boolean}
+      if(cfg.withCredentials){
+        httpConfig.withCredentials = cfg.withCredentials;
       }
     }
   };
@@ -61,29 +140,25 @@ ngGraphiteProviders.provider('graphiteApi', function(){
     return httpConfig;
   };
 
-  this.getProviderConfig = function () {
-    return providerConfig;
+  this.getOptions = function () {
+    return this.options;
   };
 
-  //todo: refactor to createRender?
-  this.createGraphiteUrl = function() {
-    //convert providerConfig into $http.params
-    //url + /render?target=
-    httpConfig.url = providerConfig.baseUrl + '/render?' + providerConfig.targets + '&from=' + providerConfig.from + '&until=' + providerConfig.until + '&format=' + providerConfig.format;
-    return httpConfig.url;
+  var buildUrl = function(){
+    return '';
   };
 
   this.$get = ['$http', function($http){
+
     return {
-      getData: function(){
-        return $http();
+
+      render: function(){
+          httpConfig.url = buildUrl();
+          return $http(httpConfig);
       }
-    }
+
+    };
 
   }];
 
-//  this.$get = ['$http', function ($http) {
-//      createGraphiteUrl();
-//      return $http(httpConfig);
-//  }]
 });

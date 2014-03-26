@@ -18,8 +18,10 @@ module.exports = function (grunt) {
         cwd: 'src',
         src: [
           'factories/graphite-api-format-factory.js',
+          'factories/graphite-api-target-factory.js',
           'providers/graphite-api-provider.js',
-          'services/graphite-find-service.js'
+          'services/graphite-find-service.js',
+          'services/graphite-date-parser-service.js'
         ],
         dest: 'generated'
       }
@@ -32,8 +34,10 @@ module.exports = function (grunt) {
       js: {
         src: [
           'src/namespace.js',
+          'generated/services/graphite-date-parser-service.js',
           'generated/providers/graphite-api-provider.js',
           'generated/factories/graphite-api-format-factory.js',
+          'generated/factories/graphite-api-target-factory.js',
           'generated/services/graphite-find-service.js'
         ],
         dest: 'dist/<%= pkg.name %>.js'

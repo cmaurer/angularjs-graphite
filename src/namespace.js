@@ -1,3 +1,5 @@
+'use strict';
+
 window.ngGraphite = {};
 window.ngGraphite.i18n = {};
 

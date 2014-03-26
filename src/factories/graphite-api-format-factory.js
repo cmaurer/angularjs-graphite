@@ -32,7 +32,7 @@
  */
 ngGraphiteFactories
 .factory('GraphiteDataParser', function () {
-'use strict';
+
     return {
 
       /**
@@ -70,6 +70,7 @@ ngGraphiteFactories
         });
         return response;
       },
+
       /**
        * @ngdoc function
        * @name ngGraphite.factories.GraphiteDataParser.jsonToRaw
@@ -81,61 +82,5 @@ ngGraphiteFactories
       }
     };
 
-})
-.factory('GraphiteDateParser', function () {
-  'use strict';
-   var yearsRegex = /(\-)([0-9]*)(y[ear]*?s?)/,
-      monthsRegex = /(\-)([0-9]*)(m[onth]*?s?)/,
-      daysRegex = /(\-)([0-9]*)(d[ay]*?s?)/,
-      hoursRegex = /(\-)([0-9]*)(h[our]*?s?)/,
-      minutesRegex = /(\-)([0-9]*)(m[inute]*?s?)/,
-      secondsRegex = /(\-)([0-9]*)(s[econd]*?s?)/;
-
-    var parseDate = function(dte){
-      if(yearsRegex.test(dte)){
-//        return moment().subtract('years', +yearsRegex.exec(dte)[2])
-      } else if(monthsRegex.test(dte)){
-//        return moment().subtract('months', +monthsRegex.exec(dte)[2])
-      } else if(daysRegex.test(dte)){
-//        return moment().subtract('days', +daysRegex.exec(dte)[2])
-      } else if(hoursRegex.test(dte)){
-//        return moment().subtract('hours', +hoursRegex.exec(dte)[2])
-      } else if(minutesRegex.test(dte)){
-//        return moment().subtract('minutes', +minutesRegex.exec(dte)[2])
-      } else if(secondsRegex.test(dte)){
-//        return moment().subtract('seconds', +secondsRegex.exec(dte)[2])
-      }
-    };
-
-    var createDatapoints = function(from, until, step, max, min){
-      console.log('createDatapoints', 'step', step, 'max', max, 'min', min);
-      var datapoints = [];
-      while(from.isBefore(until)){
-        datapoints.push([Math.round((Math.random() * (max - min) + min)), from.seconds(step).unix()]);
-        from.add('seconds', +step);
-      }
-      return datapoints;
-    };
-
-//    app.get('/render', function(request, response){
-//      //from, until, datapoints
-//      var resp = [],
-//        from = parseQueryDate(request.query.from),
-//        until = parseQueryDate(request.query.until),
-//        target = request.query.target,
-//        cfg = config.filter(function(d){return d.target === target;})[0],
-//        min = +cfg.min,
-//        max = +cfg.max,
-//        step = +cfg.step,
-//        datapoints = createDatapoints(from, until, step, max, min);
-//      resp.push({target: target, datapoints: datapoints});
-//      return response.send(200, resp);
-//    });
-//
-//
-    return {
-      parseDate: parseDate,
-      createDatapoints: createDatapoints
-    };
 });
 
