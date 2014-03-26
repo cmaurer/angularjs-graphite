@@ -7,6 +7,7 @@
  */
 ngGraphiteServices
   .factory('GraphiteService', ['$q', function ($q) {
+    'use strict';
 
 
     /**
@@ -54,6 +55,7 @@ ngGraphiteServices
 
     return {
       findAllMetricNames: findAllMetricNames,
-      findMetricsAt: findMetricsAt
+      findMetricsAt: findMetricsAt,
+      getAllMetricNamesBulk: getAllMetricNamesBulk
     };
   }]);

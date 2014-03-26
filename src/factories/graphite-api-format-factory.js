@@ -32,6 +32,7 @@
  */
 ngGraphiteFactories
 .factory('GraphiteDataParser', function () {
+    'use strict';
 
     return {
 

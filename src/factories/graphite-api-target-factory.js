@@ -6,6 +6,7 @@
  */
 ngGraphiteFactories
   .factory('GraphiteTargetBuilder', function () {
+    'use strict';
 
     var characterListRegex =  /(\[[0-9a-zA-Z]*\])/g,
       characterRangeRegex = /(\[([a-z]*\-[a-z]*)?([A-Z]*\-[A-Z]*)?([0-9]*\-[0-9]*)?\])/g,

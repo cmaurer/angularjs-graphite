@@ -14,14 +14,11 @@ module.exports = function ( karma ) {
     logLevel:  'DEBUG',
     reporters: ['dots', 'coverage'],
     preprocessors: {
-      // source files, that you wanna generate coverage for
-      // do not include tests or libraries
-      // (these files will be instrumented by Istanbul)
-      'src/**/*.js': ['coverage']
+      'src/**/*.js': 'coverage/'
     },
     coverageReporter: {
       type: 'lcov',
-      dir: 'coverage/'
+      dir: 'coverage'
     },
     port: 7019,
     urlRoot: '/',

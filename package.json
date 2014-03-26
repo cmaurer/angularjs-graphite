@@ -48,11 +48,10 @@
     "grunt-changelog": "^0.1.4",
     "ngmin": "^0.4.1",
     "grunt-ngmin": "0.0.3",
-    "coffeeson": "^0.1.0"
+    "coffeeson": "^0.1.0",
+    "moment": "^2.5.1"
   },
   "readmeFilename": "README.md",
-  "gitHead": "05b743feda9c1c30c9072d4158eb37fe76893675",
-  "dependencies": {
-    "moment": "^2.5.1"
-  }
+  "gitHead": "05b743feda9c1c30c9072d4158eb37fe76893675"
+
 }

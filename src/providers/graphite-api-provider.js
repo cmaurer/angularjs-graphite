@@ -75,6 +75,7 @@
  * @ngdoc provider
  */
 ngGraphiteProviders.provider('graphite', function(){
+  'use strict';
 
   var httpConfig = {}, options = {};
 

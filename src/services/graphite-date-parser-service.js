@@ -30,6 +30,7 @@ var TIME_FORMAT_REGEX = {
  *
  */
 var Parser = function(options) {
+  'use strict';
   this.options = options;
 };
 
@@ -38,6 +39,7 @@ Parser.prototype = {
 
   constructor: Parser,
   parse: function(value){
+    'use strict';
     if(TIME_FORMAT_REGEX.relativeTimeRegEx.test(value)){
       return this.parseRelativeTime(value);
     } else {
@@ -45,9 +47,11 @@ Parser.prototype = {
     }
   },
   parseRelativeTime: function(value){
+    'use strict';
     return 0;
   },
   parseAbsoluteTime: function(value){
+    'use strict';
     return 0;
   }
 
@@ -59,5 +63,6 @@ Parser.prototype = {
  */
 ngGraphiteServices
 .factory('GraphiteDateParser', function(){
+    'use strict';
   return new Parser({});
 });
