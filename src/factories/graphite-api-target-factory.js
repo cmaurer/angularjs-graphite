@@ -13,28 +13,33 @@ ngGraphiteFactories
       alpha = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'],
       ALPHA = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 
+    function buildResult(strs) {
+      var first = strs.shift(), rslt = [];
+      first.values.forEach(function (d) {
+        var strr = first.str.replace(first.pattern, d);
+        if (strs.length > 0) {
+          strs.forEach(function (dd) {
+            dd.values.forEach(function (ddd) {
+              rslt.push(strr.replace(dd.pattern, ddd));
+            });
+          })
+        } else {
+          rslt.push(strr);
+        }
+      });
+      return rslt;
+    }
+
     return {
+
       buildValueList: function(value){
         //find start and end position of all brackets '[]' in value
         //find start and end position of all brackets '{}'
-        var strs = [], rslt = [];
+        var strs = [];
         value.match(valueListRegex).forEach(function(match, idx){
           strs.push({index: idx, values: match.replace('{', '').replace('}', '').split(','), str: value, pattern: match});
         });
-        var first = strs.shift();
-        first.values.forEach(function(d){
-          var strr = first.str.replace(first.pattern, d);
-          if(strs.length > 0){
-            strs.forEach(function(dd){
-              dd.values.forEach(function(ddd){
-                rslt.push(strr.replace(dd.pattern, ddd));
-              });
-            })
-          } else {
-            rslt.push(strr);
-          }
-        });
-        return rslt;
+        return buildResult(strs);
       },
       buildCharacterRange: function(value){
         //find start and end position of all brackets '[]' in value
@@ -57,20 +62,7 @@ ngGraphiteFactories
             strs.push({index: idx, values: nums, str: value, pattern: match});
           }
         });
-        var first = strs.shift(), rslt = [];
-        first.values.forEach(function(d){
-          var strr = first.str.replace(first.pattern, d);
-          if(strs.length > 0){
-            strs.forEach(function(dd){
-              dd.values.forEach(function(ddd){
-                rslt.push(strr.replace(dd.pattern, ddd));
-              });
-            })
-          } else {
-            rslt.push(strr);
-          }
-        });
-        return rslt;
+        return buildResult(strs);
       },
       buildCharacterList: function(value){
         //find start and end position of all brackets '[]' in value
@@ -82,20 +74,7 @@ ngGraphiteFactories
           }
           strs.push({index: idx, values: vals, str: value, pattern: match});
         });
-        var first = strs.shift(), rslt = [];
-        first.values.forEach(function(d){
-          var strr = first.str.replace(first.pattern, d);
-          if(strs.length > 0){
-            strs.forEach(function(dd){
-              dd.values.forEach(function(ddd){
-                rslt.push(strr.replace(dd.pattern, ddd));
-              });
-            })
-          } else {
-            rslt.push(strr);
-          }
-        });
-        return rslt;
+        return buildResult(strs);
       },
       build: function(value){
         if (characterListRegex.test(value)) {

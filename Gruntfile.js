@@ -122,8 +122,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-ngmin');
 
   // Default task.
-  grunt.registerTask('default', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous', 'uglify', 'ngmin']);
+  grunt.registerTask('default', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous', 'uglify']);
   grunt.registerTask('docs', ['clean', 'concat', 'ngdocs']);
-  grunt.registerTask('travis', ['clean', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous', 'coveralls']);
+  grunt.registerTask('travis', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous', 'coveralls', 'uglify']);
 
 };
