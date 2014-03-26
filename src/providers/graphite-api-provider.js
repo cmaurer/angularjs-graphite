@@ -76,12 +76,12 @@
  */
 ngGraphiteProviders.provider('graphite', function(){
 
-  var httpConfig = {};
+  var httpConfig = {}, options = {};
 
   this.config = function (cfg) {
     if(cfg){
       if(cfg.baseUrl){
-        this.options.baseUrl = cfg.baseUrl.replace(/\/$/, '');
+        options.baseUrl = cfg.baseUrl.replace(/\/$/, '');
       }
       //{string | object | array}
       if(cfg.targets){
@@ -94,17 +94,17 @@ ngGraphiteProviders.provider('graphite', function(){
         } else {
           tgt = 'target=' + cfg.targets;
         }
-        this.options.targets = tgt;
+        options.targets = tgt;
       }
       if(cfg.from){
-        this.options.from = cfg.from;
+        options.from = cfg.from;
       }
       if(cfg.until){
-        this.options.until = cfg.until;
+        options.until = cfg.until;
       }
       //string: raw, csv, json, pickle
       if(cfg.format){
-        this.options.format = cfg.format;
+        options.format = cfg.format;
       }
     }
   };
@@ -141,7 +141,7 @@ ngGraphiteProviders.provider('graphite', function(){
   };
 
   this.getOptions = function () {
-    return this.options;
+    return options;
   };
 
   var buildUrl = function(){
