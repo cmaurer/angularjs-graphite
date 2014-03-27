@@ -58,6 +58,10 @@
     "grunt-selenium-webdriver": "^0.2.392",
     "qs": "^0.6.6"
   },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=1.4.3"
+  },
   "readmeFilename": "README.md",
   "gitHead": "05b743feda9c1c30c9072d4158eb37fe76893675"
 }
