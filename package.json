@@ -49,9 +49,15 @@
     "ngmin": "^0.4.1",
     "grunt-ngmin": "0.0.3",
     "coffeeson": "^0.1.0",
-    "moment": "^2.5.1"
+    "moment": "^2.5.1",
+    "selenium-webdriver": "^2.40.0",
+    "protractor": "^0.20.1",
+    "grunt-protractor-runner": "^0.2.4",
+    "grunt-contrib-connect": "^0.7.1",
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt-selenium-webdriver": "^0.2.392",
+    "qs": "^0.6.6"
   },
   "readmeFilename": "README.md",
   "gitHead": "05b743feda9c1c30c9072d4158eb37fe76893675"
-
 }

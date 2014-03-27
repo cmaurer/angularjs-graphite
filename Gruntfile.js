@@ -1,4 +1,6 @@
 /*global module:false*/
+var qs = require('qs'), mockGraphite = require('./test/graphite/graphite.mock.server.js');
+
 module.exports = function (grunt) {
   'use strict';
   // Project configuration.
@@ -17,6 +19,7 @@ module.exports = function (grunt) {
         expand: true,
         cwd: 'src',
         src: [
+          'namespace.js',
           'factories/graphite-api-format-factory.js',
           'factories/graphite-api-target-factory.js',
           'providers/graphite-api-provider.js',
@@ -33,7 +36,7 @@ module.exports = function (grunt) {
       },
       js: {
         src: [
-          'src/namespace.js',
+          'generated/namespace.js',
           'generated/services/graphite-date-parser-service.js',
           'generated/providers/graphite-api-provider.js',
           'generated/factories/graphite-api-format-factory.js',
@@ -99,10 +102,68 @@ module.exports = function (grunt) {
     ngdocs: {
       options: {
         dest: 'docs',
-        scripts: ['angular.js']
+        scripts: ['angular.js', 'dist/angularjs-graphite.js']
       },
-      targets:{
-        src: ['src/**/*.js']
+      all: ['src/**/*.js']
+    },
+    copy: {
+      main: {
+        files: [
+          {src: ['dist/angularjs-graphite.js'],
+            dest: 'app/js/', filter: 'isFile'}
+        ]
+      }
+    },
+    connect: {
+      web: {
+        options: {
+          port: 9000,
+          base: 'app',
+          keepalive: false
+        }
+      },
+      graphite: {
+        options: {
+          port: 9001,
+          keepalive: false,
+          middleware: [
+            function query(req, res, next){
+              if (!req.query) {
+                req.query = ~req.url.indexOf('?')
+                  ? qs.parse(req.url.split('?')[1])
+                  : {};
+              }
+              next();
+            },
+            function graphite(req, res, next) {
+              if(req.url.indexOf('/render') <= -1) return next();
+              mockGraphite.render(req, function(err, response){
+                if(err){
+                  return res.end(500, err);
+                }
+                return res.end(JSON.stringify(response));
+              });
+            }
+          ]
+        }
+      }
+    },
+    protractor: {
+      options: {
+        configFile: "node_modules/protractor/referenceConf.js", // Default config file
+        keepAlive: true, // If false, the grunt process stops when the test fails.
+        noColor: false, // If true, protractor will not use colors in its output.
+        args: {
+          // Arguments passed to the command
+        }
+      },
+      protractor_test: {
+        options: {
+          configFile: "protractor.conf.js",
+          args: {
+            verbose: true
+          }
+        }
       }
     }
 
@@ -121,10 +182,35 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-ngdocs');
   grunt.loadNpmTasks('grunt-changelog');
   grunt.loadNpmTasks('grunt-ngmin');
+  grunt.loadNpmTasks('grunt-protractor-runner');
+  grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-selenium-webdriver');
 
   // Default task.
   grunt.registerTask('default', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous', 'uglify']);
-  grunt.registerTask('docs', ['clean', 'concat', 'ngdocs']);
+  grunt.registerTask('docs', ['clean', 'ngmin', 'concat', 'ngdocs']);
+  grunt.registerTask('test', ['copy', 'selenium_phantom_hub', 'connect', 'protractor', 'selenium_stop']);
   grunt.registerTask('travis', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous', 'coveralls', 'uglify']);
+
+
+  /**
+   * function(connect, options, middlewares) {
+
+            middlewares.push(function(req, res, next) {
+
+              console.log('req', req.url);
+              if (req.url.indexOf('/render') <= -1) return next();
+
+              return mockGraphite.render(req, function(err, response){
+                if(err){
+                  return res.end(500, err);
+                }
+                return res.end(response.statusCode, response);
+              });
+            });
+            return middlewares;
+          }
+   */
 
 };
