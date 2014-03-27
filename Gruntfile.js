@@ -193,24 +193,4 @@ module.exports = function (grunt) {
   grunt.registerTask('test', ['copy', 'selenium_phantom_hub', 'connect', 'protractor', 'selenium_stop']);
   grunt.registerTask('travis', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous', 'coveralls', 'uglify']);
 
-
-  /**
-   * function(connect, options, middlewares) {
-
-            middlewares.push(function(req, res, next) {
-
-              console.log('req', req.url);
-              if (req.url.indexOf('/render') <= -1) return next();
-
-              return mockGraphite.render(req, function(err, response){
-                if(err){
-                  return res.end(500, err);
-                }
-                return res.end(response.statusCode, response);
-              });
-            });
-            return middlewares;
-          }
-   */
-
 };
