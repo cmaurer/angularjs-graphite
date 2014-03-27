@@ -74,92 +74,101 @@
 /**
  * @ngdoc provider
  */
-ngGraphiteProviders.provider('graphite', function(){
+ngGraphiteProviders.provider('Graphite', function(){
   'use strict';
 
-  var httpConfig = {}, options = {};
+  var defaultMethod = 'GET';
+  this.setDefaultMethod = function(method){
+    defaultMethod = method;
+  };
 
-  this.config = function (cfg) {
-    if(cfg){
-      if(cfg.baseUrl){
-        options.baseUrl = cfg.baseUrl.replace(/\/$/, '');
-      }
-      //{string | object | array}
-      if(cfg.targets){
-        var tgt = '';
-        if(Array.isArray(cfg.targets)){
-          cfg.targets.forEach(function(target){
-            tgt = tgt + '&target=' + target;
-          });
-            tgt = tgt.replace(/^\&/,'');
-        } else {
-          tgt = 'target=' + cfg.targets;
-        }
-        options.targets = tgt;
-      }
-      if(cfg.from){
-        options.from = cfg.from;
-      }
-      if(cfg.until){
-        options.until = cfg.until;
-      }
-      //string: raw, csv, json, pickle
-      if(cfg.format){
-        options.format = cfg.format;
-      }
+  var defaultProtocol = 'http';
+  this.setDefaultProtocol = function(protocol){
+    defaultProtocol = protocol;
+  };
+
+  var defaultHost = 'localhost';
+  this.setDefaultHost = function(host){
+    defaultHost = host;
+  };
+
+  var defaultPort = 80;
+  this.setDefaultPort = function(port){
+    defaultPort = port;
+  };
+
+  var defaultFormat = 'json';
+  this.setDefaultFormat = function(format){
+    defaultFormat = format;
+  };
+
+  var defaultPath = '/render';
+  this.setDefaultPath = function(path){
+    defaultPath = path;
+  };
+
+  var defaultFrom = '-24h';
+  this.setDefaultFrom = function(from){
+    defaultFrom = from;
+  };
+
+  var defaultUntil = 'now';
+  this.setDefaultUntil = function(until){
+    defaultUntil = until;
+  };
+
+  this.buildUrl = function(path, targets, from, until){
+    if(!path){
+      path = defaultPath;
     }
-  };
-
-  this.httpConfig = function(cfg){
-    if(cfg){
-      //GET, POST, PUT, etc
-      if(cfg.method){
-        httpConfig.method = cfg.method;
-      }
-      if(cfg.transformRequest){
-        httpConfig.transformRequest = cfg.transformRequest;
-      }
-      if(cfg.transformResponse){
-        httpConfig.transformResponse = cfg.transformResponse;
-      }
-      //{boolean|Cache}
-      if(cfg.cache){
-        httpConfig.cache = cfg.cache;
-      }
-      //{number|Promise}
-      if(cfg.timeout){
-        httpConfig.timeout = cfg.timeout;
-      }
-      //{boolean}
-      if(cfg.withCredentials){
-        httpConfig.withCredentials = cfg.withCredentials;
-      }
+    if(!from){
+      from = defaultFrom;
     }
+    if(!until){
+      until = defaultUntil;
+    }
+    var urlStr = defaultProtocol + '://' +
+      defaultHost + ':' +
+      defaultPort +
+      path +
+      '?format=' + defaultFormat +
+      '&from=' + from +
+      '&until=' + until;
+    if(targets){
+      targets.forEach(function(target){
+        urlStr = urlStr + '&target=' + target;
+      });
+    }
+    return urlStr;
+
   };
 
-  this.getHttpConfig = function () {
-    return httpConfig;
-  };
-
-  this.getOptions = function () {
-    return options;
-  };
-
-  var buildUrl = function(){
-    return '';
-  };
-
-  this.$get = ['$http', function($http){
-
+  this.$get = function(){
     return {
-
-      render: function(){
-          httpConfig.url = buildUrl();
-          return $http(httpConfig);
+      buildUrl: function(path, targets, from, until){
+        if(!path){
+          path = defaultPath;
+        }
+        if(!from){
+          from = defaultFrom;
+        }
+        if(!until){
+          until = defaultUntil;
+        }
+        var urlStr = defaultProtocol + '://' +
+          defaultHost + ':' +
+          defaultPort +
+          path +
+          '?format=' + defaultFormat +
+          '&from=' + from +
+          '&until=' + until;
+        if(targets){
+          targets.forEach(function(target){
+            urlStr = urlStr + '&target=' + target;
+          });
+        }
+        return urlStr;
       }
-
-    };
-
-  }];
-
+    }
+  }
 });

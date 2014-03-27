@@ -136,6 +136,7 @@ module.exports = function (grunt) {
               next();
             },
             function graphite(req, res, next) {
+              res.setHeader("Access-Control-Allow-Origin", "*");
               if(req.url.indexOf('/render') <= -1) return next();
               mockGraphite.render(req, function(err, response){
                 if(err){
@@ -190,7 +191,7 @@ module.exports = function (grunt) {
   // Default task.
   grunt.registerTask('default', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous', 'uglify']);
   grunt.registerTask('docs', ['clean', 'ngmin', 'concat', 'ngdocs']);
-  grunt.registerTask('test', ['copy', 'selenium_phantom_hub', 'connect', 'protractor', 'selenium_stop']);
-  grunt.registerTask('travis', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous', 'coveralls', 'uglify']);
+  grunt.registerTask('test', ['default', 'copy', 'selenium_phantom_hub', 'connect', 'protractor', 'selenium_stop']);
+  grunt.registerTask('travis', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous', 'coveralls', 'uglify', 'copy', 'selenium_phantom_hub', 'connect', 'protractor', 'selenium_stop']);
 
 };

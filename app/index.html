@@ -6,9 +6,16 @@
 </head>
 <body ng-controller="EndToEndController">
 
+    <div>{{testName}}</div>
+    <div>{{url}}</div>
+    <div>{{status}}</div>
+    <div>{{data}}</div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
-<script src="js/dist/angularjs-graphite.js"></script>
+    <div ng-repeat="target in data">{{target}}</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.js"></script>
+<script src="./js/dist/angularjs-graphite.js"></script>
 <script src="app.js"></script>
 
 </body>
