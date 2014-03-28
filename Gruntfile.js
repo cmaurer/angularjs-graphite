@@ -115,14 +115,14 @@ module.exports = function (grunt) {
       }
     },
     connect: {
-      web: {
+      www: {
         options: {
           port: 9000,
           base: 'app',
           keepalive: false
         }
       },
-      graphite: {
+      server: {
         options: {
           port: 9001,
           keepalive: false,
@@ -189,9 +189,16 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-selenium-webdriver');
 
   // Default task.
-  grunt.registerTask('default', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous', 'uglify']);
+  grunt.registerTask('default', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous']);
+  grunt.registerTask('build', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'uglify']);
+
+  grunt.registerTask('unit', ['karma:continuous']);
+  grunt.registerTask('e2e', ['copy', 'selenium_phantom_hub', 'connect', 'protractor', 'selenium_stop']);
+
   grunt.registerTask('docs', ['clean', 'ngmin', 'concat', 'ngdocs']);
-  grunt.registerTask('test', ['default', 'copy', 'selenium_phantom_hub', 'connect', 'protractor', 'selenium_stop']);
-  grunt.registerTask('travis', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous', 'coveralls', 'uglify', 'copy', 'selenium_phantom_hub', 'connect', 'protractor', 'selenium_stop']);
+
+  grunt.registerTask('travis', ['build', 'unit', 'coveralls', 'e2e']);
+  grunt.registerTask('all', ['build', 'unit', 'e2e']);
+
 
 };

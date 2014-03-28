@@ -7,10 +7,10 @@ app.config(function(GraphiteProvider){
   GraphiteProvider.setDefaultUntil('-15s');
 });
 
-app.controller('EndToEndController', ['$scope', 'Graphite', '$http', function($scope, GraphiteProvider, $http){
+app.controller('EndToEndController', ['$scope', 'Graphite', '$http', 'GraphiteTargetBuilder', function($scope, GraphiteProvider, $http, GraphiteTargetBuilder){
 
   $scope.testName = 'test';
-  $scope.url = GraphiteProvider.buildUrl('/render', ['one.two']);
+  $scope.url = GraphiteProvider.buildUrl('/render', GraphiteTargetBuilder.build('foobar.{one,two,three}.{five,six,seven}'));
   $http({method:'GET', url: $scope.url})
     .success(function(data, status) {
       $scope.data = data;
