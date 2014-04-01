@@ -9,4 +9,4 @@ before_script:
   - ./scripts/web-server.js > /dev/null &
   - sleep 1 # give server time to start
 
-script: "grunt travis"
+script: "grunt travis --verbose"
