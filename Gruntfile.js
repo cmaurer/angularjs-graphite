@@ -13,7 +13,7 @@ module.exports = function (grunt) {
       '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
       ' Licensed <%= pkg.license %> */\n',
     // Task configuration.
-    clean: ['dist/', 'coverage/', 'docs/', 'generated/'],
+    clean: ['dist/', 'coverage/', 'docs/', 'generated/', '_book'],
     ngmin: {
       directives: {
         expand: true,
