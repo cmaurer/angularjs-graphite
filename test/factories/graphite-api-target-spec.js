@@ -1,5 +1,5 @@
 describe('Graphite Target Factory ', function(){
-  "use strict";
+  'use strict';
 
   beforeEach(module('ngGraphite.factories'));
 
@@ -55,6 +55,27 @@ describe('Graphite Target Factory ', function(){
       expect(result.indexOf('foobbarf')).toNotEqual(-1);
     });
 
+    it('should create multiple metrics from more than two character lists.', function(){
+      var buildTarget = 'foo[ab]bar[ef]ing[mn]',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(8);
+
+      expect(result.indexOf('fooabareingm')).toNotEqual(-1);
+      expect(result.indexOf('fooabareingn')).toNotEqual(-1);
+
+      expect(result.indexOf('fooabarfingm')).toNotEqual(-1);
+      expect(result.indexOf('fooabarfingn')).toNotEqual(-1);
+
+      expect(result.indexOf('foobbareingm')).toNotEqual(-1);
+      expect(result.indexOf('foobbareingn')).toNotEqual(-1);
+
+      expect(result.indexOf('foobbarfingm')).toNotEqual(-1);
+      expect(result.indexOf('foobbarfingn')).toNotEqual(-1);
+
+    });
+
   });
 
   describe('Character Range ', function(){
@@ -88,7 +109,7 @@ describe('Graphite Target Factory ', function(){
         expect(result.indexOf('foocbar')).toNotEqual(-1);
     });
 
-    it('should create multiple metrics from more than three character ranges.', function(){
+    it('should create multiple metrics from more than two character ranges.', function(){
       var buildTarget = 'foo.[a-c].bar.[d-f].ing.[g-i]',
         result = graphiteTargetBuilder.build(buildTarget);
       expect(result).toBeDefined();
@@ -268,7 +289,7 @@ describe('Graphite Target Factory ', function(){
         expect(result.indexOf('foobar.threeseven')).toNotEqual(-1);
     });
 
-    xit('should create a multiple metrics from three value lists.', function(){
+    it('should create a multiple metrics from three value lists.', function(){
       var buildTarget = 'foobar.{one,two}.bar.{three,four}.ing.{five,six}',
         result = graphiteTargetBuilder.build(buildTarget);
         expect(result).toBeDefined();
@@ -286,7 +307,7 @@ describe('Graphite Target Factory ', function(){
 
   });
 
-  xdescribe('Mixed Cases', function() {
+  describe('Mixed Cases', function() {
     var graphiteTargetBuilder;
     beforeEach(module('ngGraphite.factories'));
     beforeEach(inject(function (GraphiteTargetBuilder) {
