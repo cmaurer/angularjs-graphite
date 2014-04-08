@@ -94,10 +94,9 @@ module.exports = function (grunt) {
       }
     },
     changelog: {
-      options: {
-        after: '2014-01-01',
-        fixRegex: /^(.*)$/gim
-      }
+        options: {
+          repository: 'https://github.com/cmaurer/angularjs-graphite'
+        }
     },
     ngdocs: {
       options: {
@@ -188,6 +187,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-selenium-webdriver');
   grunt.loadNpmTasks('grunt-gitbook');
+  grunt.loadNpmTasks('grunt-conventional-changelog');
 
   // Default task.
   grunt.registerTask('default', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous']);
@@ -198,7 +198,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('docs', ['clean', 'ngmin', 'concat', 'ngdocs']);
 
-  grunt.registerTask('travis', ['build', 'unit', 'coveralls', 'e2e']);
+  grunt.registerTask('travis', ['build', 'unit', 'coveralls']);
   grunt.registerTask('all', ['build', 'unit', 'e2e']);
 
 
