@@ -94,20 +94,19 @@ ngGraphiteFactories
     return {
       build: function(value){
         var arr, strs = [], origValue = value.slice(0);
+
+        function addToStrArray(str){
+          strs.push(str);
+        }
+
         while ((arr = allPatternsRegex.exec(value)) !== null) {
           var token = arr[0].slice(0);
           if (token.match(characterListRegex) !== null) {
-            buildCharacterList(token).forEach(function(str){
-              strs.push(str);
-            });
+            buildCharacterList(token).forEach(addToStrArray);
           } else if (token.match(characterRangeRegex) !== null) {
-            buildCharacterRange(token).forEach(function(str){
-              strs.push(str);
-            });
+            buildCharacterRange(token).forEach(addToStrArray);
           } else if (token.match(valueListRegex) !== null) {
-            buildValueList(token).forEach(function(str){
-              strs.push(str);
-            });
+            buildValueList(token).forEach(addToStrArray);
           } else {
             console.log('token not matched', token);
           }

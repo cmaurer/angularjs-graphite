@@ -14,11 +14,11 @@ module.exports = function ( karma ) {
     logLevel:  'DEBUG',
     reporters: ['dots', 'coverage'],
     preprocessors: {
-      'src/**/*.js': 'coverage/'
+      'dist/**/*.js': 'coverage'
     },
     coverageReporter: {
       type: 'lcov',
-      dir: 'coverage'
+      dir: 'coverage/'
     },
     port: 7019,
     urlRoot: '/',
