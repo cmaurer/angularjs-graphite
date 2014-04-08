@@ -8,86 +8,115 @@ ngGraphiteFactories
   .factory('GraphiteTargetBuilder', function () {
     'use strict';
 
-    var characterListRegex =  /(\[[0-9a-zA-Z]*\])/g,
-      characterRangeRegex = /(\[([a-z]*\-[a-z]*)?([A-Z]*\-[A-Z]*)?([0-9]*\-[0-9]*)?\])/g,
+    var allPatternsRegex = /(\[[0-9a-zA-Z]*\])|(\[([a-zA-Z]*\-[a-zA-z]*)?([0-9]*\-[0-9]*)?\])|\{([\w\d\,]*)\}/g,
+      characterListRegex =  /(\[[0-9a-zA-Z]*\])/g,
+      characterRangeRegex = /(\[([a-zA-Z]*\-[a-zA-Z]*)?([0-9]*\-[0-9]*)?\])/g,
       valueListRegex = /\{([\w\d\,]*)\}/g,
       alpha = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'],
       ALPHA = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 
-    function buildResult(strs) {
-      var first = strs.shift(), rslt = [];
-      first.values.forEach(function (d) {
-        var strr = first.str.replace(first.pattern, d);
-        if (strs.length > 0) {
-          strs.forEach(function (dd) {
-            dd.values.forEach(function (ddd) {
-              rslt.push(strr.replace(dd.pattern, ddd));
+    function buildResult(value, strs) {
+      var rslts = [], filteredResults = [];
+      strs.forEach(function(str, strsIdx){
+        str.values.map(function(d){
+          if(strsIdx === 0){
+            rslts.push(value.replace(str.pattern, d));
+          } else {
+            rslts.map(function(rslt){
+                return rslt.replace(str.pattern, d);
+            }).forEach(function(r){
+              rslts.push(r);
             });
-          })
-        } else {
-          rslt.push(strr);
+          }
+        });
+      });
+
+      var patterns = strs.map(function(d){ return d.pattern});
+      patterns.forEach(function(p){
+        rslts = rslts.filter(function(d){
+          return (d.indexOf(p) === -1);
+        });
+      });
+      rslts.forEach(function(d){
+        if(filteredResults.indexOf(d) === -1){
+          filteredResults.push(d);
         }
       });
-      return rslt;
+      return filteredResults;
+    }
+
+    function buildValueList(value){
+      var strs = [];
+      value.match(valueListRegex).forEach(function(match){
+        strs.push({values: match.replace('{', '').replace('}', '').split(','), str: value, pattern: match});
+      });
+      return strs;
+    }
+
+    function buildCharacterRange(value){
+      //find start and end position of all brackets '[]' in value
+      var strs = [], nums;
+      value.match(characterRangeRegex).forEach(function(match){
+        var range = match.replace('[', '').replace(']', '').split('-');
+        if(isNaN(range[0])){
+          //characters
+          if(alpha.indexOf(range[0]) > -1){
+            strs.push({values: alpha.slice(alpha.indexOf(range[0]), alpha.indexOf(range[1]) + 1), str: value, pattern: match});
+          } else {
+            strs.push({values: ALPHA.slice(ALPHA.indexOf(range[0]), ALPHA.indexOf(range[1]) + 1), str: value, pattern: match});
+          }
+        } else {
+          //numbers
+          nums = [];
+          for(var i = +range[0]; i < (+range[1] + 1); i++){
+            nums.push(i);
+          }
+          strs.push({values: nums, str: value, pattern: match});
+        }
+      });
+      return strs;
+    }
+
+     function buildCharacterList(value){
+      //find start and end position of all brackets '[]' in value
+      var strs = [], range, vals = [];
+      value.match(characterListRegex).forEach(function(match){
+        range = match.replace('[', '').replace(']', '');
+        vals = [];
+        for(var i=0;i<range.length;i++){
+          vals.push(range[i]);
+        }
+        strs.push({values: vals, str: value, pattern: match});
+      });
+      return strs;
     }
 
     return {
-
-      buildValueList: function(value){
-        //find start and end position of all brackets '[]' in value
-        //find start and end position of all brackets '{}'
-        var strs = [];
-        value.match(valueListRegex).forEach(function(match, idx){
-          strs.push({index: idx, values: match.replace('{', '').replace('}', '').split(','), str: value, pattern: match});
-        });
-        return buildResult(strs);
-      },
-      buildCharacterRange: function(value){
-        //find start and end position of all brackets '[]' in value
-        var strs = [], nums;
-        value.match(characterRangeRegex).forEach(function(match, idx){
-          var range = match.replace('[', '').replace(']', '').split('-');
-          if(isNaN(range[0])){
-            //characters
-            if(alpha.indexOf(range[0]) > -1){
-              strs.push({index: idx, values: alpha.slice(alpha.indexOf(range[0]), alpha.indexOf(range[1]) + 1), str: value, pattern: match});
-            } else {
-              strs.push({index: idx, values: ALPHA.slice(ALPHA.indexOf(range[0]), ALPHA.indexOf(range[1]) + 1), str: value, pattern: match});
-            }
-          } else {
-            //numbers
-            nums = [];
-            for(var i = +range[0]; i < (+range[1] + 1); i++){
-              nums.push(i);
-            }
-            strs.push({index: idx, values: nums, str: value, pattern: match});
-          }
-        });
-        return buildResult(strs);
-      },
-      buildCharacterList: function(value){
-        //find start and end position of all brackets '[]' in value
-        var strs = [];
-        value.match(characterListRegex).forEach(function(match, idx){
-          var range = match.replace('[', '').replace(']', ''), vals = [];
-          for(var i=0;i<range.length;i++){
-            vals.push(range[i]);
-          }
-          strs.push({index: idx, values: vals, str: value, pattern: match});
-        });
-        return buildResult(strs);
-      },
       build: function(value){
-        if (characterListRegex.test(value)) {
-          return this.buildCharacterList(value);
+        var arr, strs = [], origValue = value.slice(0);
+        while ((arr = allPatternsRegex.exec(value)) !== null) {
+          var token = arr[0].slice(0);
+          if (token.match(characterListRegex) !== null) {
+            buildCharacterList(token).forEach(function(str){
+              strs.push(str);
+            });
+          } else if (token.match(characterRangeRegex) !== null) {
+            buildCharacterRange(token).forEach(function(str){
+              strs.push(str);
+            });
+          } else if (token.match(valueListRegex) !== null) {
+            buildValueList(token).forEach(function(str){
+              strs.push(str);
+            });
+          } else {
+            console.log('token not matched', token);
+          }
         }
-        if (characterRangeRegex.test(value)) {
-          return this.buildCharacterRange(value);
-        }
-        if (valueListRegex.test(value)) {
-          return this.buildValueList(value);
-        }
-        return []; //return empty array if nothing is matched.
+
+        return buildResult(origValue, strs);
+      },
+      buildAll: function(values){
+        return [];
       }
 
     };
