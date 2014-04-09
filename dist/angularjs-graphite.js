@@ -1,4 +1,4 @@
-/*! angularjs-graphite - v0.0.0 - 2014-04-08
+/*! angularjs-graphite - v0.0.0 - 2014-04-09
  * Copyright (c) 2014 ; Licensed Apache License, v2.0 */
 window.ngGraphite = {};
 window.ngGraphite.i18n = {};
@@ -190,10 +190,10 @@ ngGraphiteFactories.factory( 'GraphiteDataParser', function () {
 } );
 ngGraphiteFactories.factory( 'GraphiteTargetBuilder', function () {
   'use strict';
-  var allPatternsRegex = /(\[[0-9a-zA-Z]*\])|(\[([a-zA-Z]*\-[a-zA-z]*)?([0-9]*\-[0-9]*)?\])|\{([\w\d\,]*)\}/g,
+  var allPatternsRegex = /(\[[0-9a-zA-Z]*\])|(\[([a-zA-Z]*\-[a-zA-z]*)?([0-9]*\-[0-9]*)?\])|\{(.*?)\}/g,
     characterListRegex = /(\[[0-9a-zA-Z]*\])/g,
     characterRangeRegex = /(\[([a-zA-Z]*\-[a-zA-Z]*)?([0-9]*\-[0-9]*)?\])/g,
-    valueListRegex = /\{([\w\d\,]*)\}/g,
+    valueListRegex = /\{(.*?)\}/g,
     alpha = [
       'a',
       'b',
@@ -282,7 +282,13 @@ ngGraphiteFactories.factory( 'GraphiteTargetBuilder', function () {
     } );
     return filteredResults;
   }
-
+  /**
+   *
+   * Value List
+   *
+   * @param value
+   * @returns {Array}
+   */
   function buildValueList( value ) {
     var strs = [];
     value.match( valueListRegex ).forEach( function ( match ) {

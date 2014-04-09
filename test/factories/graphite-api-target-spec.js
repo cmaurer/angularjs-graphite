@@ -244,7 +244,7 @@ describe('Graphite Target Factory ', function(){
       graphiteTargetBuilder = GraphiteTargetBuilder;
     }));
 
-    it('should create a multiple metrics from a value list.', function(){
+    it('should create multiple metrics from a value list.', function(){
       var buildTarget = 'foobar.{one,two,three}',
         result = graphiteTargetBuilder.build(buildTarget);
         expect(result).toBeDefined();
@@ -255,7 +255,7 @@ describe('Graphite Target Factory ', function(){
         expect(result.indexOf('foobar.three')).toNotEqual(-1);
     });
 
-    it('should create a multiple metrics from multiple value lists.', function(){
+    it('should create multiple metrics from multiple value lists.', function(){
       var buildTarget = 'foobar.{one,two,three}.{five,six,seven}',
         result = graphiteTargetBuilder.build(buildTarget);
         expect(result).toBeDefined();
@@ -272,7 +272,7 @@ describe('Graphite Target Factory ', function(){
         expect(result.indexOf('foobar.three.seven')).toNotEqual(-1);
     });
 
-    it('should create a multiple metrics from multiple value lists.', function(){
+    it('should create multiple metrics from multiple value lists.', function(){
       var buildTarget = 'foobar.{one,two,three}{five,six,seven}',
         result = graphiteTargetBuilder.build(buildTarget);
         expect(result).toBeDefined();
@@ -289,7 +289,7 @@ describe('Graphite Target Factory ', function(){
         expect(result.indexOf('foobar.threeseven')).toNotEqual(-1);
     });
 
-    it('should create a multiple metrics from three value lists.', function(){
+    it('should create multiple metrics from three value lists.', function(){
       var buildTarget = 'foobar.{one,two}.bar.{three,four}.ing.{five,six}',
         result = graphiteTargetBuilder.build(buildTarget);
         expect(result).toBeDefined();
@@ -305,7 +305,19 @@ describe('Graphite Target Factory ', function(){
         expect(result.indexOf('foobar.two.bar.four.ing.six')).toNotEqual(-1);
     });
 
-  });
+
+    it('should create metrics from value lists with special characters.', function() {
+      var buildTarget = 'foobar.{one.two,three.four}.bar',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(2);
+      expect(result.indexOf('foobar.one.two.bar')).toNotEqual(-1);
+      expect(result.indexOf('foobar.three.four.bar')).toNotEqual(-1);
+
+    });
+
+    });
 
   describe('Mixed Cases', function() {
     var graphiteTargetBuilder;

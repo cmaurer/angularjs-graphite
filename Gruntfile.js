@@ -67,7 +67,8 @@ module.exports = function (grunt) {
       options: {
         debug: true,
         coverage_dir: 'coverage/',
-        force: true
+        force: true,
+        dryRun: true
       }
     },
     jsbeautifier : {

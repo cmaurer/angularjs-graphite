@@ -8,10 +8,10 @@ ngGraphiteFactories
   .factory('GraphiteTargetBuilder', function () {
     'use strict';
 
-    var allPatternsRegex = /(\[[0-9a-zA-Z]*\])|(\[([a-zA-Z]*\-[a-zA-z]*)?([0-9]*\-[0-9]*)?\])|\{([\w\d\,]*)\}/g,
+    var allPatternsRegex = /(\[[0-9a-zA-Z]*\])|(\[([a-zA-Z]*\-[a-zA-z]*)?([0-9]*\-[0-9]*)?\])|\{(.*?)\}/g,
       characterListRegex =  /(\[[0-9a-zA-Z]*\])/g,
       characterRangeRegex = /(\[([a-zA-Z]*\-[a-zA-Z]*)?([0-9]*\-[0-9]*)?\])/g,
-      valueListRegex = /\{([\w\d\,]*)\}/g,
+      valueListRegex = /\{(.*?)\}/g,
       alpha = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'],
       ALPHA = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 
@@ -45,6 +45,13 @@ ngGraphiteFactories
       return filteredResults;
     }
 
+    /**
+     *
+     * Value List
+     *
+     * @param value
+     * @returns {Array}
+     */
     function buildValueList(value){
       var strs = [];
       value.match(valueListRegex).forEach(function(match){
