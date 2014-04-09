@@ -55,6 +55,18 @@ describe('Graphite Target Factory ', function(){
       expect(result.indexOf('foobbarf')).toNotEqual(-1);
     });
 
+    it('should create multiple metrics from back to back character lists.', function(){
+      var buildTarget = 'foo[ab][ef]bar',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(4);
+      expect(result.indexOf('fooaebar')).toNotEqual(-1);
+      expect(result.indexOf('fooafbar')).toNotEqual(-1);
+      expect(result.indexOf('foobebar')).toNotEqual(-1);
+      expect(result.indexOf('foobfbar')).toNotEqual(-1);
+    });
+
     it('should create multiple metrics from more than two character lists.', function(){
       var buildTarget = 'foo[ab]bar[ef]ing[mn]',
         result = graphiteTargetBuilder.build(buildTarget);
@@ -98,7 +110,7 @@ describe('Graphite Target Factory ', function(){
     });
 
     //foo[a-c]bar[e-g]
-    it('should create multiple metrics from a multiple character ranges.', function(){
+    it('should create multiple metrics from multiple character ranges.', function(){
       var buildTarget = 'foo[a-c]bar',
         result = graphiteTargetBuilder.build(buildTarget);
         expect(result).toBeDefined();
@@ -107,6 +119,26 @@ describe('Graphite Target Factory ', function(){
         expect(result.indexOf('fooabar')).toNotEqual(-1);
         expect(result.indexOf('foobbar')).toNotEqual(-1);
         expect(result.indexOf('foocbar')).toNotEqual(-1);
+    });
+
+    it('should create multiple metrics from back to back character ranges.', function(){
+      var buildTarget = 'foo[a-c][d-f]bar',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(9);
+      expect(result.indexOf('fooadbar')).toNotEqual(-1);
+      expect(result.indexOf('fooaebar')).toNotEqual(-1);
+      expect(result.indexOf('fooafbar')).toNotEqual(-1);
+
+      expect(result.indexOf('foobdbar')).toNotEqual(-1);
+      expect(result.indexOf('foobebar')).toNotEqual(-1);
+      expect(result.indexOf('foobfbar')).toNotEqual(-1);
+
+      expect(result.indexOf('foocdbar')).toNotEqual(-1);
+      expect(result.indexOf('foocebar')).toNotEqual(-1);
+      expect(result.indexOf('foocfbar')).toNotEqual(-1);
+
     });
 
     it('should create multiple metrics from more than two character ranges.', function(){
@@ -175,7 +207,7 @@ describe('Graphite Target Factory ', function(){
     });
 
     //foo[1-3]bar[5-7]
-    it('should create multiple metrics from a multiple number ranges.', function(){
+    it('should create multiple metrics from multiple number ranges.', function(){
       var buildTarget = 'foo[1-3]bar[5-7]',
         result = graphiteTargetBuilder.build(buildTarget);
         expect(result).toBeDefined();
@@ -192,21 +224,38 @@ describe('Graphite Target Factory ', function(){
         expect(result.indexOf('foo3bar7')).toNotEqual(-1);
     });
 
-    it('should create multiple metrics from a multiple number ranges with periods between ranges.', function(){
+    it('should create multiple metrics from multiple number ranges with periods between ranges.', function(){
       var buildTarget = 'foo.[1-3].bar.[5-7]',
         result = graphiteTargetBuilder.build(buildTarget);
-      expect(result).toBeDefined();
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toEqual(9);
-      expect(result.indexOf('foo.1.bar.5')).toNotEqual(-1);
-      expect(result.indexOf('foo.1.bar.6')).toNotEqual(-1);
-      expect(result.indexOf('foo.1.bar.7')).toNotEqual(-1);
-      expect(result.indexOf('foo.2.bar.5')).toNotEqual(-1);
-      expect(result.indexOf('foo.2.bar.6')).toNotEqual(-1);
-      expect(result.indexOf('foo.2.bar.7')).toNotEqual(-1);
-      expect(result.indexOf('foo.3.bar.5')).toNotEqual(-1);
-      expect(result.indexOf('foo.3.bar.6')).toNotEqual(-1);
-      expect(result.indexOf('foo.3.bar.7')).toNotEqual(-1);
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+        expect(result.length).toEqual(9);
+        expect(result.indexOf('foo.1.bar.5')).toNotEqual(-1);
+        expect(result.indexOf('foo.1.bar.6')).toNotEqual(-1);
+        expect(result.indexOf('foo.1.bar.7')).toNotEqual(-1);
+        expect(result.indexOf('foo.2.bar.5')).toNotEqual(-1);
+        expect(result.indexOf('foo.2.bar.6')).toNotEqual(-1);
+        expect(result.indexOf('foo.2.bar.7')).toNotEqual(-1);
+        expect(result.indexOf('foo.3.bar.5')).toNotEqual(-1);
+        expect(result.indexOf('foo.3.bar.6')).toNotEqual(-1);
+        expect(result.indexOf('foo.3.bar.7')).toNotEqual(-1);
+    });
+
+    it('should create multiple metrics from back to back number ranges.', function(){
+      var buildTarget = 'foo.[1-3][5-7].bar',
+        result = graphiteTargetBuilder.build(buildTarget);
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+        expect(result.length).toEqual(9);
+        expect(result.indexOf('foo.15.bar')).toNotEqual(-1);
+        expect(result.indexOf('foo.16.bar')).toNotEqual(-1);
+        expect(result.indexOf('foo.17.bar')).toNotEqual(-1);
+        expect(result.indexOf('foo.25.bar')).toNotEqual(-1);
+        expect(result.indexOf('foo.26.bar')).toNotEqual(-1);
+        expect(result.indexOf('foo.27.bar')).toNotEqual(-1);
+        expect(result.indexOf('foo.35.bar')).toNotEqual(-1);
+        expect(result.indexOf('foo.36.bar')).toNotEqual(-1);
+        expect(result.indexOf('foo.37.bar')).toNotEqual(-1);
     });
 
     it('should create multiple metrics from three number ranges.', function(){
@@ -305,19 +354,41 @@ describe('Graphite Target Factory ', function(){
         expect(result.indexOf('foobar.two.bar.four.ing.six')).toNotEqual(-1);
     });
 
-
     it('should create metrics from value lists with special characters.', function() {
       var buildTarget = 'foobar.{one.two,three.four}.bar',
         result = graphiteTargetBuilder.build(buildTarget);
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+        expect(result.length).toEqual(2);
+        expect(result.indexOf('foobar.one.two.bar')).toNotEqual(-1);
+        expect(result.indexOf('foobar.three.four.bar')).toNotEqual(-1);
+    });
+
+    it('should create metrics from back to back value lists.', function() {
+      var buildTarget = 'foobar.{one,two}{three,four}.bar',
+        result = graphiteTargetBuilder.build(buildTarget);
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+        expect(result.length).toEqual(4);
+        expect(result.indexOf('foobar.onethree.bar')).toNotEqual(-1);
+        expect(result.indexOf('foobar.onefour.bar')).toNotEqual(-1);
+        expect(result.indexOf('foobar.twothree.bar')).toNotEqual(-1);
+        expect(result.indexOf('foobar.twofour.bar')).toNotEqual(-1);
+    });
+
+    it('should create metrics from back to back value lists with special characters.', function() {
+      var buildTarget = 'foobar.{one.a,two.b}{three.c,four.d}.bar',
+        result = graphiteTargetBuilder.build(buildTarget);
       expect(result).toBeDefined();
       expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toEqual(2);
-      expect(result.indexOf('foobar.one.two.bar')).toNotEqual(-1);
-      expect(result.indexOf('foobar.three.four.bar')).toNotEqual(-1);
-
+      expect(result.length).toEqual(4);
+      expect(result.indexOf('foobar.one.athree.c.bar')).toNotEqual(-1);
+      expect(result.indexOf('foobar.one.afour.d.bar')).toNotEqual(-1);
+      expect(result.indexOf('foobar.two.bthree.c.bar')).toNotEqual(-1);
+      expect(result.indexOf('foobar.two.bfour.d.bar')).toNotEqual(-1);
     });
 
-    });
+  });
 
   describe('Mixed Cases', function() {
     var graphiteTargetBuilder;
@@ -326,91 +397,173 @@ describe('Graphite Target Factory ', function(){
       graphiteTargetBuilder = GraphiteTargetBuilder;
     }));
 
-    it('*** should create metrics from a range first and a value list second.', function(){
+    it('should create metrics from a range first and a value list second.', function(){
       var buildTarget = 'foobar.[1-3].{five,six,seven}',
         result = graphiteTargetBuilder.build(buildTarget);
-      expect(result).toBeDefined();
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toEqual(9);
-      expect(result.indexOf('foobar.1.five')).toNotEqual(-1);
-      expect(result.indexOf('foobar.1.six')).toNotEqual(-1);
-      expect(result.indexOf('foobar.1.seven')).toNotEqual(-1);
-      expect(result.indexOf('foobar.2.five')).toNotEqual(-1);
-      expect(result.indexOf('foobar.2.six')).toNotEqual(-1);
-      expect(result.indexOf('foobar.2.seven')).toNotEqual(-1);
-      expect(result.indexOf('foobar.3.five')).toNotEqual(-1);
-      expect(result.indexOf('foobar.3.six')).toNotEqual(-1);
-      expect(result.indexOf('foobar.3.seven')).toNotEqual(-1);
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+        expect(result.length).toEqual(9);
+        expect(result.indexOf('foobar.1.five')).toNotEqual(-1);
+        expect(result.indexOf('foobar.1.six')).toNotEqual(-1);
+        expect(result.indexOf('foobar.1.seven')).toNotEqual(-1);
+        expect(result.indexOf('foobar.2.five')).toNotEqual(-1);
+        expect(result.indexOf('foobar.2.six')).toNotEqual(-1);
+        expect(result.indexOf('foobar.2.seven')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3.five')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3.six')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3.seven')).toNotEqual(-1);
     });
 
+    it('should create metrics from back to back range first and a value list second.', function(){
+      var buildTarget = 'foobar.[1-3]{five,six,seven}',
+        result = graphiteTargetBuilder.build(buildTarget);
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+        expect(result.length).toEqual(9);
+        expect(result.indexOf('foobar.1five')).toNotEqual(-1);
+        expect(result.indexOf('foobar.1six')).toNotEqual(-1);
+        expect(result.indexOf('foobar.1seven')).toNotEqual(-1);
+        expect(result.indexOf('foobar.2five')).toNotEqual(-1);
+        expect(result.indexOf('foobar.2six')).toNotEqual(-1);
+        expect(result.indexOf('foobar.2seven')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3five')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3six')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3seven')).toNotEqual(-1);
+    });
 
     it('should create metrics from a value list first and a range second.', function(){
       var buildTarget = 'foobar.{one,two,three}.[5-7]',
         result = graphiteTargetBuilder.build(buildTarget);
-      expect(result).toBeDefined();
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toEqual(9);
-      expect(result.indexOf('foobar.one.5')).toNotEqual(-1);
-      expect(result.indexOf('foobar.one.6')).toNotEqual(-1);
-      expect(result.indexOf('foobar.one.7')).toNotEqual(-1);
-      expect(result.indexOf('foobar.two.5')).toNotEqual(-1);
-      expect(result.indexOf('foobar.two.6')).toNotEqual(-1);
-      expect(result.indexOf('foobar.two.7')).toNotEqual(-1);
-      expect(result.indexOf('foobar.three.5')).toNotEqual(-1);
-      expect(result.indexOf('foobar.three.6')).toNotEqual(-1);
-      expect(result.indexOf('foobar.three.7')).toNotEqual(-1);
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+        expect(result.length).toEqual(9);
+        expect(result.indexOf('foobar.one.5')).toNotEqual(-1);
+        expect(result.indexOf('foobar.one.6')).toNotEqual(-1);
+        expect(result.indexOf('foobar.one.7')).toNotEqual(-1);
+        expect(result.indexOf('foobar.two.5')).toNotEqual(-1);
+        expect(result.indexOf('foobar.two.6')).toNotEqual(-1);
+        expect(result.indexOf('foobar.two.7')).toNotEqual(-1);
+        expect(result.indexOf('foobar.three.5')).toNotEqual(-1);
+        expect(result.indexOf('foobar.three.6')).toNotEqual(-1);
+        expect(result.indexOf('foobar.three.7')).toNotEqual(-1);
     });
 
-    it('should create metrics from range,character list.', function(){
+    it('should create metrics from back to back value list first and a range second.', function(){
+      var buildTarget = 'foobar.{one,two,three}[5-7]',
+        result = graphiteTargetBuilder.build(buildTarget);
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+        expect(result.length).toEqual(9);
+        expect(result.indexOf('foobar.one5')).toNotEqual(-1);
+        expect(result.indexOf('foobar.one6')).toNotEqual(-1);
+        expect(result.indexOf('foobar.one7')).toNotEqual(-1);
+        expect(result.indexOf('foobar.two5')).toNotEqual(-1);
+        expect(result.indexOf('foobar.two6')).toNotEqual(-1);
+        expect(result.indexOf('foobar.two7')).toNotEqual(-1);
+        expect(result.indexOf('foobar.three5')).toNotEqual(-1);
+        expect(result.indexOf('foobar.three6')).toNotEqual(-1);
+        expect(result.indexOf('foobar.three7')).toNotEqual(-1);
+    });
+
+    it('should create metrics from a range, character list.', function(){
       var buildTarget = 'foobar.[1-3].[ABC]',
         result = graphiteTargetBuilder.build(buildTarget);
-      expect(result).toBeDefined();
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toEqual(9);
-      expect(result.indexOf('foobar.1.A')).toNotEqual(-1);
-      expect(result.indexOf('foobar.1.B')).toNotEqual(-1);
-      expect(result.indexOf('foobar.1.C')).toNotEqual(-1);
-      expect(result.indexOf('foobar.2.A')).toNotEqual(-1);
-      expect(result.indexOf('foobar.2.B')).toNotEqual(-1);
-      expect(result.indexOf('foobar.2.C')).toNotEqual(-1);
-      expect(result.indexOf('foobar.3.A')).toNotEqual(-1);
-      expect(result.indexOf('foobar.3.B')).toNotEqual(-1);
-      expect(result.indexOf('foobar.3.C')).toNotEqual(-1);
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+        expect(result.length).toEqual(9);
+        expect(result.indexOf('foobar.1.A')).toNotEqual(-1);
+        expect(result.indexOf('foobar.1.B')).toNotEqual(-1);
+        expect(result.indexOf('foobar.1.C')).toNotEqual(-1);
+        expect(result.indexOf('foobar.2.A')).toNotEqual(-1);
+        expect(result.indexOf('foobar.2.B')).toNotEqual(-1);
+        expect(result.indexOf('foobar.2.C')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3.A')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3.B')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3.C')).toNotEqual(-1);
     });
 
-    it('should create metrics from range,character list.', function(){
+    it('should create metrics from back to back range, character list.', function(){
+      var buildTarget = 'foobar.[1-3][ABC]',
+        result = graphiteTargetBuilder.build(buildTarget);
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+        expect(result.length).toEqual(9);
+        expect(result.indexOf('foobar.1A')).toNotEqual(-1);
+        expect(result.indexOf('foobar.1B')).toNotEqual(-1);
+        expect(result.indexOf('foobar.1C')).toNotEqual(-1);
+        expect(result.indexOf('foobar.2A')).toNotEqual(-1);
+        expect(result.indexOf('foobar.2B')).toNotEqual(-1);
+        expect(result.indexOf('foobar.2C')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3A')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3B')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3C')).toNotEqual(-1);
+    });
+
+    it('should create metrics from a range, character list.', function(){
       var buildTarget = 'foobar.[13].[6-9]',
         result = graphiteTargetBuilder.build(buildTarget);
-      expect(result).toBeDefined();
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toEqual(8);
-      expect(result.indexOf('foobar.1.6')).toNotEqual(-1);
-      expect(result.indexOf('foobar.1.7')).toNotEqual(-1);
-      expect(result.indexOf('foobar.1.8')).toNotEqual(-1);
-      expect(result.indexOf('foobar.1.9')).toNotEqual(-1);
-      expect(result.indexOf('foobar.3.6')).toNotEqual(-1);
-      expect(result.indexOf('foobar.3.7')).toNotEqual(-1);
-      expect(result.indexOf('foobar.3.8')).toNotEqual(-1);
-      expect(result.indexOf('foobar.3.9')).toNotEqual(-1);
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+        expect(result.length).toEqual(8);
+        expect(result.indexOf('foobar.1.6')).toNotEqual(-1);
+        expect(result.indexOf('foobar.1.7')).toNotEqual(-1);
+        expect(result.indexOf('foobar.1.8')).toNotEqual(-1);
+        expect(result.indexOf('foobar.1.9')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3.6')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3.7')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3.8')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3.9')).toNotEqual(-1);
     });
 
-    it('should create metrics from range,value list.', function(){
+    it('should create metrics from back to back range, character list.', function(){
+      var buildTarget = 'foobar.[13][6-9]',
+        result = graphiteTargetBuilder.build(buildTarget);
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+        expect(result.length).toEqual(8);
+        expect(result.indexOf('foobar.16')).toNotEqual(-1);
+        expect(result.indexOf('foobar.17')).toNotEqual(-1);
+        expect(result.indexOf('foobar.18')).toNotEqual(-1);
+        expect(result.indexOf('foobar.19')).toNotEqual(-1);
+        expect(result.indexOf('foobar.36')).toNotEqual(-1);
+        expect(result.indexOf('foobar.37')).toNotEqual(-1);
+        expect(result.indexOf('foobar.38')).toNotEqual(-1);
+        expect(result.indexOf('foobar.39')).toNotEqual(-1);
+    });
+
+    it('should create metrics from a range, value list.', function(){
       var buildTarget = 'foobar.[13].{6,7,8,9}',
         result = graphiteTargetBuilder.build(buildTarget);
-      expect(result).toBeDefined();
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toEqual(8);
-      expect(result.indexOf('foobar.1.6')).toNotEqual(-1);
-      expect(result.indexOf('foobar.1.7')).toNotEqual(-1);
-      expect(result.indexOf('foobar.1.8')).toNotEqual(-1);
-      expect(result.indexOf('foobar.1.9')).toNotEqual(-1);
-      expect(result.indexOf('foobar.3.6')).toNotEqual(-1);
-      expect(result.indexOf('foobar.3.7')).toNotEqual(-1);
-      expect(result.indexOf('foobar.3.8')).toNotEqual(-1);
-      expect(result.indexOf('foobar.3.9')).toNotEqual(-1);
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+        expect(result.length).toEqual(8);
+        expect(result.indexOf('foobar.1.6')).toNotEqual(-1);
+        expect(result.indexOf('foobar.1.7')).toNotEqual(-1);
+        expect(result.indexOf('foobar.1.8')).toNotEqual(-1);
+        expect(result.indexOf('foobar.1.9')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3.6')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3.7')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3.8')).toNotEqual(-1);
+        expect(result.indexOf('foobar.3.9')).toNotEqual(-1);
+    });
+
+    it('should create metrics from a back to back range, value list.', function(){
+      var buildTarget = 'foobar.[13]{6,7,8,9}',
+        result = graphiteTargetBuilder.build(buildTarget);
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+        expect(result.length).toEqual(8);
+        expect(result.indexOf('foobar.16')).toNotEqual(-1);
+        expect(result.indexOf('foobar.17')).toNotEqual(-1);
+        expect(result.indexOf('foobar.18')).toNotEqual(-1);
+        expect(result.indexOf('foobar.19')).toNotEqual(-1);
+        expect(result.indexOf('foobar.36')).toNotEqual(-1);
+        expect(result.indexOf('foobar.37')).toNotEqual(-1);
+        expect(result.indexOf('foobar.38')).toNotEqual(-1);
+        expect(result.indexOf('foobar.39')).toNotEqual(-1);
     });
 
   });
 
-  });
+});
 
