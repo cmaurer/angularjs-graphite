@@ -67,8 +67,6 @@ module.exports = function (grunt) {
       options: {
         debug: true,
         coverage_dir: 'coverage/',
-        service_name: 'travis-ci',
-        repo_token: '86J66aBc6CFuDT1BGiuQW8oS6V8dF5FlJ',
         force: true
       }
     },
