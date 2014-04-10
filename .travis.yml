@@ -4,9 +4,10 @@ node_js:
 
 before_script:
   - export DISPLAY=:99.0
+  - export COVERALLS_SERVICE_NAME=travis-ci
+  - export COVERALLS_REPO_TOKEN=86J66aBc6CFuDT1BGiuQW8oS6V8dF5FlJ
   - sh -e /etc/init.d/xvfb start
   - npm install --quiet -g karma
   - ./scripts/web-server.js > /dev/null &
   - sleep 1 # give server time to start
-
 script: "grunt travis --verbose"
