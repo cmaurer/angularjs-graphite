@@ -24,6 +24,8 @@ app.config(['$graphiteProvider', function ($graphiteProvider) {
 ]);
 ```
 
+### Examples
+[api provider gist](https://gist.github.com/cmaurer/10699308)
 
 
 ### Typical Usage
