@@ -8,9 +8,9 @@ ngGraphiteFactories
   .factory('GraphiteTargetBuilder', function () {
     'use strict';
 
-    var allPatternsRegex = /(\[[0-9a-zA-Z]*\])|(\[([a-zA-Z]*\-[a-zA-z]*)?([0-9]*\-[0-9]*)?\])|\{(.*?)\}/g,
+    var allPatternsRegex = /(\[[0-9a-zA-Z]*\])|(\[[a-z0-9A-Z].*?\])|\{(.*?)\}/g,
       characterListRegex =  /(\[[0-9a-zA-Z]*\])/g,
-      characterRangeRegex = /(\[([a-zA-Z]*\-[a-zA-Z]*)?([0-9]*\-[0-9]*)?\])/g,
+      characterRangeRegex = /(\[[0-9a-zA-Z].*?\])/g,
       valueListRegex = /\{(.*?)\}/g,
       alpha = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'],
       ALPHA = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
@@ -60,25 +60,35 @@ ngGraphiteFactories
       return strs;
     }
 
+    function buildRange(value, match, range, strs){
+      if(isNaN(range[0])){
+        //characters
+        if(alpha.indexOf(range[0]) > -1){
+          strs.push({values: alpha.slice(alpha.indexOf(range[0]), alpha.indexOf(range[1]) + 1), str: value, pattern: match});
+        } else {
+          strs.push({values: ALPHA.slice(ALPHA.indexOf(range[0]), ALPHA.indexOf(range[1]) + 1), str: value, pattern: match});
+        }
+      } else {
+        //numbers
+        var nums = [];
+        for(var i = +range[0]; i < (+range[1] + 1); i++){
+          nums.push(i);
+        }
+        strs.push({values: nums, str: value, pattern: match});
+      }
+    }
+
     function buildCharacterRange(value){
       //find start and end position of all brackets '[]' in value
-      var strs = [], nums;
+      var strs = [];
       value.match(characterRangeRegex).forEach(function(match){
-        var range = match.replace('[', '').replace(']', '').split('-');
-        if(isNaN(range[0])){
-          //characters
-          if(alpha.indexOf(range[0]) > -1){
-            strs.push({values: alpha.slice(alpha.indexOf(range[0]), alpha.indexOf(range[1]) + 1), str: value, pattern: match});
-          } else {
-            strs.push({values: ALPHA.slice(ALPHA.indexOf(range[0]), ALPHA.indexOf(range[1]) + 1), str: value, pattern: match});
-          }
+        if(match.indexOf(',') > -1){
+          match.replace('[', '').replace(']', '').split(',').forEach(function(rge){
+            buildRange(value, match, rge.split('-'), strs);
+          });
         } else {
-          //numbers
-          nums = [];
-          for(var i = +range[0]; i < (+range[1] + 1); i++){
-            nums.push(i);
-          }
-          strs.push({values: nums, str: value, pattern: match});
+          var range = match.replace('[', '').replace(']', '').split('-');
+          buildRange(value, match, range, strs);
         }
       });
       return strs;
@@ -114,12 +124,13 @@ ngGraphiteFactories
             buildCharacterRange(token).forEach(addToStrArray);
           } else if (token.match(valueListRegex) !== null) {
             buildValueList(token).forEach(addToStrArray);
-          } else {
-            console.log('token not matched', token);
           }
         }
-
-        return buildResult(origValue, strs);
+        if(strs.length === 0){
+          return [value];
+        } else {
+          return buildResult(origValue, strs);
+        }
       },
       buildAll: function(values){
         return [];

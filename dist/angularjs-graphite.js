@@ -1,4 +1,4 @@
-/*! angularjs-graphite - v0.0.0 - 2014-04-10
+/*! angularjs-graphite - v0.0.0 - 2014-04-15
  * Copyright (c) 2014 ; Licensed Apache License, v2.0 */
 window.ngGraphite = {};
 window.ngGraphite.i18n = {};
@@ -190,9 +190,9 @@ ngGraphiteFactories.factory( 'GraphiteDataParser', function () {
 } );
 ngGraphiteFactories.factory( 'GraphiteTargetBuilder', function () {
   'use strict';
-  var allPatternsRegex = /(\[[0-9a-zA-Z]*\])|(\[([a-zA-Z]*\-[a-zA-z]*)?([0-9]*\-[0-9]*)?\])|\{(.*?)\}/g,
+  var allPatternsRegex = /(\[[0-9a-zA-Z]*\])|(\[[a-z0-9A-Z].*?\])|\{(.*?)\}/g,
     characterListRegex = /(\[[0-9a-zA-Z]*\])/g,
-    characterRangeRegex = /(\[([a-zA-Z]*\-[a-zA-Z]*)?([0-9]*\-[0-9]*)?\])/g,
+    characterRangeRegex = /(\[[0-9a-zA-Z].*?\])/g,
     valueListRegex = /\{(.*?)\}/g,
     alpha = [
       'a',
@@ -301,38 +301,47 @@ ngGraphiteFactories.factory( 'GraphiteTargetBuilder', function () {
     return strs;
   }
 
-  function buildCharacterRange( value ) {
-    //find start and end position of all brackets '[]' in value
-    var strs = [],
-      nums;
-    value.match( characterRangeRegex ).forEach( function ( match ) {
-      var range = match.replace( '[', '' ).replace( ']', '' ).split( '-' );
-      if ( isNaN( range[ 0 ] ) ) {
-        //characters
-        if ( alpha.indexOf( range[ 0 ] ) > -1 ) {
-          strs.push( {
-            values: alpha.slice( alpha.indexOf( range[ 0 ] ), alpha.indexOf( range[ 1 ] ) + 1 ),
-            str: value,
-            pattern: match
-          } );
-        } else {
-          strs.push( {
-            values: ALPHA.slice( ALPHA.indexOf( range[ 0 ] ), ALPHA.indexOf( range[ 1 ] ) + 1 ),
-            str: value,
-            pattern: match
-          } );
-        }
-      } else {
-        //numbers
-        nums = [];
-        for ( var i = +range[ 0 ]; i < +range[ 1 ] + 1; i++ ) {
-          nums.push( i );
-        }
+  function buildRange( value, match, range, strs ) {
+    if ( isNaN( range[ 0 ] ) ) {
+      //characters
+      if ( alpha.indexOf( range[ 0 ] ) > -1 ) {
         strs.push( {
-          values: nums,
+          values: alpha.slice( alpha.indexOf( range[ 0 ] ), alpha.indexOf( range[ 1 ] ) + 1 ),
           str: value,
           pattern: match
         } );
+      } else {
+        strs.push( {
+          values: ALPHA.slice( ALPHA.indexOf( range[ 0 ] ), ALPHA.indexOf( range[ 1 ] ) + 1 ),
+          str: value,
+          pattern: match
+        } );
+      }
+    } else {
+      //numbers
+      var nums = [];
+      for ( var i = +range[ 0 ]; i < +range[ 1 ] + 1; i++ ) {
+        nums.push( i );
+      }
+      strs.push( {
+        values: nums,
+        str: value,
+        pattern: match
+      } );
+    }
+  }
+
+  function buildCharacterRange( value ) {
+    //find start and end position of all brackets '[]' in value
+    var strs = [];
+    value.match( characterRangeRegex ).forEach( function ( match ) {
+      if ( match.indexOf( ',' ) > -1 ) {
+        match.replace( '[', '' ).replace( ']', '' ).split( ',' ).forEach( function ( rge ) {
+          buildRange( value, match, rge.split( '-' ), strs );
+        } );
+      } else {
+        var range = match.replace( '[', '' ).replace( ']', '' ).split( '-' );
+        buildRange( value, match, range, strs );
       }
     } );
     return strs;
@@ -372,11 +381,13 @@ ngGraphiteFactories.factory( 'GraphiteTargetBuilder', function () {
           buildCharacterRange( token ).forEach( addToStrArray );
         } else if ( token.match( valueListRegex ) !== null ) {
           buildValueList( token ).forEach( addToStrArray );
-        } else {
-          console.log( 'token not matched', token );
         }
       }
-      return buildResult( origValue, strs );
+      if ( strs.length === 0 ) {
+        return [ value ];
+      } else {
+        return buildResult( origValue, strs );
+      }
     },
     buildAll: function ( values ) {
       return [];

@@ -88,6 +88,26 @@ describe('Graphite Target Factory ', function(){
 
     });
 
+    //sumSeries(foo[a]bar)
+    it('should create a single metric from a single character list with graphite function.', function(){
+      var buildTarget = 'sumSeries(foo[a]bar)',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(1);
+      expect(result.indexOf('sumSeries(fooabar)')).toNotEqual(-1);
+    });
+
+    //foo[a]bar*
+    it('should create a single metric from a single character list with wild card character.', function(){
+      var buildTarget = 'foo[a]bar*',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(1);
+      expect(result.indexOf('fooabar*')).toNotEqual(-1);
+    });
+
   });
 
   describe('Character Range ', function(){
@@ -183,6 +203,30 @@ describe('Graphite Target Factory ', function(){
       expect(result.indexOf('foo.c.bar.f.ing.h')).toNotEqual(-1);
       expect(result.indexOf('foo.c.bar.f.ing.i')).toNotEqual(-1);
 
+    });
+
+    //sumSeries(foo[a-c]bar)
+    it('should create multiple metrics from a single character range with graphite function.', function(){
+      var buildTarget = 'sumSeries(foo[a-c]bar)',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(3);
+      expect(result.indexOf('sumSeries(fooabar)')).toNotEqual(-1);
+      expect(result.indexOf('sumSeries(foobbar)')).toNotEqual(-1);
+      expect(result.indexOf('sumSeries(foocbar)')).toNotEqual(-1);
+    });
+
+    //foo[a-c]bar*
+    it('should create multiple metrics from a single character range with wildcard.', function(){
+      var buildTarget = 'foo[a-c]bar*',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(3);
+      expect(result.indexOf('fooabar*')).toNotEqual(-1);
+      expect(result.indexOf('foobbar*')).toNotEqual(-1);
+      expect(result.indexOf('foocbar*')).toNotEqual(-1);
     });
 
   });
@@ -284,6 +328,59 @@ describe('Graphite Target Factory ', function(){
         expect(result.indexOf('foo.3.bar.7.ing.8')).toNotEqual(-1);
         expect(result.indexOf('foo.3.bar.7.ing.9')).toNotEqual(-1);
     });
+
+    xit('should create multiple metrics from multi-ranges.', function(){
+      var buildTarget = 'foo.[1-3,5-7].bar',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(6);
+      expect(result.indexOf('foo.1.bar')).toNotEqual(-1);
+      expect(result.indexOf('foo.2.bar')).toNotEqual(-1);
+      expect(result.indexOf('foo.3.bar')).toNotEqual(-1);
+      expect(result.indexOf('foo.5.bar')).toNotEqual(-1);
+      expect(result.indexOf('foo.6.bar')).toNotEqual(-1);
+      expect(result.indexOf('foo.7.bar')).toNotEqual(-1);
+    });
+
+    xit('should create multiple metrics from multi-ranges.', function(){
+      var buildTarget = 'foo.[a-c,h-j].bar',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(6);
+      expect(result.indexOf('foo.a.bar')).toNotEqual(-1);
+      expect(result.indexOf('foo.b.bar')).toNotEqual(-1);
+      expect(result.indexOf('foo.c.bar')).toNotEqual(-1);
+      expect(result.indexOf('foo.h.bar')).toNotEqual(-1);
+      expect(result.indexOf('foo.i.bar')).toNotEqual(-1);
+      expect(result.indexOf('foo.j.bar')).toNotEqual(-1);
+    });
+
+    //sumSeries(foo[1-3]bar)
+    it('should create a multiple metrics from a single number range with graphite function.', function(){
+      var buildTarget = 'sumSeries(foo[1-3]bar)',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(3);
+      expect(result.indexOf('sumSeries(foo1bar)')).toNotEqual(-1);
+      expect(result.indexOf('sumSeries(foo2bar)')).toNotEqual(-1);
+      expect(result.indexOf('sumSeries(foo3bar)')).toNotEqual(-1);
+    });
+
+    //foo[1-3]bar*
+    it('should create a multiple metrics from a single number range with wildcard.', function(){
+      var buildTarget = 'foo[1-3]bar*',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(3);
+      expect(result.indexOf('foo1bar*')).toNotEqual(-1);
+      expect(result.indexOf('foo2bar*')).toNotEqual(-1);
+      expect(result.indexOf('foo3bar*')).toNotEqual(-1);
+    });
+
   });
 
   describe('Value List ', function(){
@@ -386,6 +483,30 @@ describe('Graphite Target Factory ', function(){
       expect(result.indexOf('foobar.one.afour.d.bar')).toNotEqual(-1);
       expect(result.indexOf('foobar.two.bthree.c.bar')).toNotEqual(-1);
       expect(result.indexOf('foobar.two.bfour.d.bar')).toNotEqual(-1);
+    });
+
+    //sumSeries(foobar.{one,two,three})
+    it('should create multiple metrics from a value list with graphite function.', function(){
+      var buildTarget = 'sumSeries(foobar.{one,two,three})',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(3);
+      expect(result.indexOf('sumSeries(foobar.one)')).toNotEqual(-1);
+      expect(result.indexOf('sumSeries(foobar.two)')).toNotEqual(-1);
+      expect(result.indexOf('sumSeries(foobar.three)')).toNotEqual(-1);
+    });
+
+    //foobar.{one,two,three}*
+    it('should create multiple metrics from a value list with wildcard.', function(){
+      var buildTarget = 'foobar.{one,two,three}*',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(3);
+      expect(result.indexOf('foobar.one*')).toNotEqual(-1);
+      expect(result.indexOf('foobar.two*')).toNotEqual(-1);
+      expect(result.indexOf('foobar.three*')).toNotEqual(-1);
     });
 
   });
@@ -563,7 +684,85 @@ describe('Graphite Target Factory ', function(){
         expect(result.indexOf('foobar.39')).toNotEqual(-1);
     });
 
+    it('should create metrics from a back to back range, value list, wildcard.', function(){
+      var buildTarget = 'foobar.[13].*.{6,7,8,9}',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(8);
+      expect(result.indexOf('foobar.1.*.6')).toNotEqual(-1);
+      expect(result.indexOf('foobar.1.*.7')).toNotEqual(-1);
+      expect(result.indexOf('foobar.1.*.8')).toNotEqual(-1);
+      expect(result.indexOf('foobar.1.*.9')).toNotEqual(-1);
+      expect(result.indexOf('foobar.3.*.6')).toNotEqual(-1);
+      expect(result.indexOf('foobar.3.*.7')).toNotEqual(-1);
+      expect(result.indexOf('foobar.3.*.8')).toNotEqual(-1);
+      expect(result.indexOf('foobar.3.*.9')).toNotEqual(-1);
+    });
+
+    it('should create metrics from a back to back range, value list, graphite function.', function(){
+      var buildTarget = 'sumSeries(foobar.[13].*.{6,7,8,9})',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(8);
+      expect(result.indexOf('sumSeries(foobar.1.*.6)')).toNotEqual(-1);
+      expect(result.indexOf('sumSeries(foobar.1.*.7)')).toNotEqual(-1);
+      expect(result.indexOf('sumSeries(foobar.1.*.8)')).toNotEqual(-1);
+      expect(result.indexOf('sumSeries(foobar.1.*.9)')).toNotEqual(-1);
+      expect(result.indexOf('sumSeries(foobar.3.*.6)')).toNotEqual(-1);
+      expect(result.indexOf('sumSeries(foobar.3.*.7)')).toNotEqual(-1);
+      expect(result.indexOf('sumSeries(foobar.3.*.8)')).toNotEqual(-1);
+      expect(result.indexOf('sumSeries(foobar.3.*.9)')).toNotEqual(-1);
+    });
+
   });
 
-});
+  describe('Pass Through Tests ', function() {
+    var graphiteTargetBuilder;
+    beforeEach(module('ngGraphite.factories'));
+    beforeEach(inject(function (GraphiteTargetBuilder) {
+      graphiteTargetBuilder = GraphiteTargetBuilder;
+    }));
+
+    it('should pass through targets that do not have any patterns', function(){
+      var buildTarget = 'foo.1.bar',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      console.log('result', result);
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(1);
+      expect(result.indexOf('foo.1.bar')).toNotEqual(-1);
+    });
+
+    it('should pass through targets that do not have any patterns with graphite functions', function(){
+      var buildTarget = 'sumSeries(foo.1.bar)',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(1);
+      expect(result.indexOf('sumSeries(foo.1.bar)')).toNotEqual(-1);
+    });
+
+    it('should pass through targets that do not have any patterns with wild cards', function(){
+      var buildTarget = 'foo.1.bar*',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(1);
+      expect(result.indexOf('foo.1.bar*')).toNotEqual(-1);
+    });
+
+    it('should pass through targets that do not have any patterns with wild cards, internal', function(){
+      var buildTarget = 'foo.1.*.bar',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(1);
+      expect(result.indexOf('foo.1.*.bar')).toNotEqual(-1);
+    });
+
+  });
+
+  });
 
