@@ -58,8 +58,8 @@
     "protractor": "^0.21.0",
     "qs": "^0.6.6",
     "gitbook": "^0.1.2",
-    "grunt-gitbook": "^0.1.2",
-    "conventional-changelog": "0.0.6",
+    "grunt-gitbook": "^0.2.0",
+    "conventional-changelog": "0.0.8",
     "grunt-conventional-changelog": "^1.1.0"
   },
   "engines": {

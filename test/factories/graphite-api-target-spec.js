@@ -485,6 +485,18 @@ describe('Graphite Target Factory ', function(){
       expect(result.indexOf('foobar.two.bfour.d.bar')).toNotEqual(-1);
     });
 
+    it('should create metrics from back to back value lists with special characters and graphite function.', function() {
+      var buildTarget = 'sumSeries(foobar.{one.a,two.b}{three.c,four.d}.bar)',
+        result = graphiteTargetBuilder.build(buildTarget);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(4);
+      expect(result.indexOf('sumSeries(foobar.one.athree.c.bar)')).toNotEqual(-1);
+      expect(result.indexOf('sumSeries(foobar.one.afour.d.bar)')).toNotEqual(-1);
+      expect(result.indexOf('sumSeries(foobar.two.bthree.c.bar)')).toNotEqual(-1);
+      expect(result.indexOf('sumSeries(foobar.two.bfour.d.bar)')).toNotEqual(-1);
+    });
+
     //sumSeries(foobar.{one,two,three})
     it('should create multiple metrics from a value list with graphite function.', function(){
       var buildTarget = 'sumSeries(foobar.{one,two,three})',
@@ -729,7 +741,6 @@ describe('Graphite Target Factory ', function(){
       var buildTarget = 'foo.1.bar',
         result = graphiteTargetBuilder.build(buildTarget);
       expect(result).toBeDefined();
-      console.log('result', result);
       expect(Array.isArray(result)).toBe(true);
       expect(result.length).toEqual(1);
       expect(result.indexOf('foo.1.bar')).toNotEqual(-1);
