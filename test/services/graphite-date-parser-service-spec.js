@@ -47,7 +47,7 @@ describe('Graphite Date Parser', function(){
       expect(date).toBeDefined();
       expect(angular.isDate(date)).toBe(true);
       expect((now.getTime() - date.getTime()) > 0).toBe(true);
-      expect((now.getTime() - date.getTime()) >= 108000000).toBe(true);
+      expect((now.getTime() - date.getTime()) >= 107008000).toBe(true);
     });
 
     it('should parse relative time - days', function(){
@@ -63,7 +63,7 @@ describe('Graphite Date Parser', function(){
       expect(date).toBeDefined();
       expect(angular.isDate(date)).toBe(true);
       expect((now.getTime() - date.getTime()) > 0).toBe(true);
-      expect((now.getTime() - date.getTime()) >= 18144000000).toBe(true);
+      expect((now.getTime() - date.getTime()) >= 18143008000).toBe(true);
     });
 
     it('should parse relative time - months', function(){
