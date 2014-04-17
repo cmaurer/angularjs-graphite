@@ -728,6 +728,21 @@ describe('Graphite Target Factory ', function(){
       expect(result.indexOf('sumSeries(foobar.3.*.9)')).toNotEqual(-1);
     });
 
+    it('should create metrics for graphite function, multiple wildcards, character list, value list', function(){
+      var buildTarget = 'sumSeries(dc.cm.mf.db.com_s_e_d_SS.*.[SF].c.s-*.{p.x,s.x})',
+        result = graphiteTargetBuilder.build(buildTarget);
+
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toEqual(4);
+      expect(result.indexOf('sumSeries(dc.cm.mf.db.com_s_e_d_SS.*.S.c.s-*.p.x)')).toNotEqual(-1);
+      expect(result.indexOf('sumSeries(dc.cm.mf.db.com_s_e_d_SS.*.S.c.s-*.s.x)')).toNotEqual(-1);
+      expect(result.indexOf('sumSeries(dc.cm.mf.db.com_s_e_d_SS.*.F.c.s-*.p.x)')).toNotEqual(-1);
+      expect(result.indexOf('sumSeries(dc.cm.mf.db.com_s_e_d_SS.*.F.c.s-*.s.x)')).toNotEqual(-1);
+
+
+    });
+
   });
 
   describe('Pass Through Tests ', function() {

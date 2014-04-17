@@ -3,8 +3,7 @@
 describe('Graphite Date Parser', function(){
 
 
-  describe('Parser', function(){
-
+  describe('Relative Time Parser', function(){
 
     var par;
 
@@ -15,7 +14,6 @@ describe('Graphite Date Parser', function(){
       };
 
     });
-
 
     /**
      *
@@ -29,45 +27,106 @@ describe('Graphite Date Parser', function(){
      * y	365 Days (year)
      */
     it('should parse relative time - seconds', function(){
-      var date = par('-30s');
+      var now = new Date(), date = par('-30s');
       expect(date).toBeDefined();
+      expect(angular.isDate(date)).toBe(true);
+      expect((now.getTime() - date.getTime()) > 0).toBe(true);
+      expect((now.getTime() - date.getTime()) >= 29000).toBe(true);
     });
 
     it('should parse relative time - minutes', function(){
-      var date = par('-30min');
+      var now = new Date(), date = par('-30min');
       expect(date).toBeDefined();
+      expect(angular.isDate(date)).toBe(true);
+      expect((now.getTime() - date.getTime()) > 0).toBe(true);
+      expect((now.getTime() - date.getTime()) >= 1800000).toBe(true);
     });
 
     it('should parse relative time - hours', function(){
-      var date = par('-30h');
+      var now = new Date(), date = par('-30h');
       expect(date).toBeDefined();
+      expect(angular.isDate(date)).toBe(true);
+      expect((now.getTime() - date.getTime()) > 0).toBe(true);
+      expect((now.getTime() - date.getTime()) >= 108000000).toBe(true);
     });
 
     it('should parse relative time - days', function(){
-      var date = par('-30d');
+      var now = new Date(), date = par('-30d');
       expect(date).toBeDefined();
+      expect(angular.isDate(date)).toBe(true);
+      expect((now.getTime() - date.getTime()) > 0).toBe(true);
+      expect((now.getTime() - date.getTime()) >= 2592000000).toBe(true);
     });
 
     it('should parse relative time - weeks', function(){
-      var date = par('-30w');
+      var now = new Date(), date = par('-30w');
       expect(date).toBeDefined();
+      expect(angular.isDate(date)).toBe(true);
+      expect((now.getTime() - date.getTime()) > 0).toBe(true);
+      expect((now.getTime() - date.getTime()) >= 18144000000).toBe(true);
     });
 
     it('should parse relative time - months', function(){
-      var date = par('-30mon');
+      var now = new Date(), date = par('-30mon');
       expect(date).toBeDefined();
+      expect(angular.isDate(date)).toBe(true);
+      expect((now.getTime() - date.getTime()) > 0).toBe(true);
+      expect((now.getTime() - date.getTime()) >= (30 * 2.62974e9)).toBe(true);
     });
 
     it('should parse relative time - years', function(){
-      var date = par('-30y');
+      var now = new Date(), date = par('-30y');
       expect(date).toBeDefined();
+      expect(angular.isDate(date)).toBe(true);
+      expect((now.getTime() - date.getTime()) > 0).toBe(true);
+      expect((now.getTime() - date.getTime()) >= (30 * 3.15569e10)).toBe(true);
+    });
+
+    it('should parse relative time - now', function(){
+      var now = new Date(), date = par('now');
+      expect(date).toBeDefined();
+      expect(angular.isDate(date)).toBe(true);
+      expect(now.getDay()).toEqual(date.getDay());
+      expect(now.getMonth()).toEqual(date.getMonth());
+      expect(now.getHours()).toEqual(date.getHours());
+      expect(now.getMinutes()).toEqual(date.getMinutes());
     });
 
     it('should not parse an invalid relative time', function(){
+      var date = par('foobar');
+      expect(date).toBeDefined();
     });
 
   });
 
+  describe('Absolute Time Parser', function(){
 
+    var par;
+
+    beforeEach(function () {
+      par = function () {
+        var parser = new Parser({});
+        return parser.parse.apply(parser, arguments);
+      };
+
+    });
+
+    /**
+     * HH:MM_YYMMDD, YYYYMMDD, MM/DD/YY
+     */
+    it('should parse relative time - HH:MM_YYMMDD', function(){
+      var date = par('20:00_140102');
+      expect(date).toBeDefined();
+      expect(angular.isDate(date)).toBe(true);
+      expect(date.getDate()).toEqual(2);
+      expect(date.getMonth()).toEqual(0);
+      expect(date.getHours()).toEqual(20);
+      expect(date.getMinutes()).toEqual(0);
+      expect(date.getSeconds()).toEqual(0);
+      expect(date.getMilliseconds()).toEqual(0);
+      expect(date.getFullYear()).toEqual(2014);
+    });
+
+  });
 
 });
