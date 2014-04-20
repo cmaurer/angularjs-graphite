@@ -47,7 +47,7 @@
     "grunt-changelog": "^0.2.1",
     "grunt-ngmin": "0.0.3",
     "grunt-protractor-runner": "^0.2.4",
-    "grunt-selenium-webdriver": "^0.2.392",
+    "grunt-selenium-webdriver": "cmaurer/grunt-selenium-webdriver",
     "phantomjs": "^1.9.7-1",
     "coveralls": "^2.10.0",
     "grunt-karma-coveralls": "^2.4.4",
@@ -60,7 +60,8 @@
     "gitbook": "^0.2.0",
     "grunt-gitbook": "^0.2.0",
     "conventional-changelog": "0.0.8",
-    "grunt-conventional-changelog": "^1.1.0"
+    "grunt-conventional-changelog": "^1.1.0",
+    "grunt-port-pick": "^1.2.1"
   },
   "engines": {
     "node": ">=0.10.0",

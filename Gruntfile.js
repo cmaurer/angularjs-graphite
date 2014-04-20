@@ -113,17 +113,43 @@ module.exports = function (grunt) {
         ]
       }
     },
+    portPick: {
+      options: {
+        port: 7654
+      },
+      selenium_phantom_hub:{
+        targets: [
+          'selenium_phantom_hub.options.port'
+        ]
+      },
+      server: {
+        targets: [
+          'connect.server.options.port'
+        ]
+      },
+      www: {
+        targets: [
+          'connect.www.options.port'
+        ]
+      }
+    },
+    selenium_phantom_hub: {
+      options: {
+        timeout: 180,
+        port: -1
+      }
+    },
     connect: {
       www: {
         options: {
-          port: 9000,
+          port: -1,
           base: 'app',
           keepalive: false
         }
       },
       server: {
         options: {
-          port: 9001,
+          port: -1,
           keepalive: false,
           middleware: [
             function query(req, res, next){
@@ -154,14 +180,20 @@ module.exports = function (grunt) {
         keepAlive: false, // If false, the grunt process stops when the test fails.
         noColor: false, // If true, protractor will not use colors in its output.
         args: {
-          // Arguments passed to the command
         }
       },
       protractor_test: {
         options: {
           configFile: "protractor.conf.js",
           args: {
-            verbose: true
+            seleniumPort: '<%= grunt.config.get("selenium_phantom_hub.options.port") %>',
+            baseUrl: 'http://localhost:<%= grunt.config.get("connect.www.options.port") %>',
+            seleniumAddress: 'http://localhost:<%= grunt.config.get("selenium_phantom_hub.options.port") %>/wd/hub',
+            capabilities: {
+              'browserName': 'phantomjs'
+            },
+            verbose: true,
+            debug: true
           }
         }
       }
@@ -188,13 +220,14 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-selenium-webdriver');
   grunt.loadNpmTasks('grunt-gitbook');
   grunt.loadNpmTasks('grunt-conventional-changelog');
+  grunt.loadNpmTasks('grunt-port-pick');
 
   // Default task.
   grunt.registerTask('default', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous']);
   grunt.registerTask('build', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'uglify']);
 
   grunt.registerTask('unit', ['karma:continuous']);
-  grunt.registerTask('e2e', ['copy', 'selenium_phantom_hub', 'connect', 'protractor', 'selenium_stop']);
+  grunt.registerTask('e2e', ['copy', 'portPick', 'selenium_phantom_hub', 'connect', 'protractor', 'selenium_stop']);
 
   grunt.registerTask('docs', ['clean', 'ngmin', 'concat', 'ngdocs']);
 

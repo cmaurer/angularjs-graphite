@@ -9,7 +9,7 @@ describe('angularjs.grapahite', function () {
       expect(pageBody.isPresent()).toEqual(true);
     });
 
-    it('should get graphite data', function(){
+    xit('should get graphite data', function(){
 
       browser.get('index.html');
       var testName = element(by.binding('testName'));

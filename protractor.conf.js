@@ -1,8 +1,8 @@
 
 exports.config = {
-
-  baseUrl: 'http://localhost:9000',
-  seleniumAddress: 'http://localhost:4444/wd/hub',
+  seleniumPort: '<%= grunt.config.get("selenium_phantom_hub.options.port") %>',
+  baseUrl: 'http://localhost:<%= grunt.config.get("connect.www.options.port") %>',
+  seleniumAddress: 'http://localhost:<%= grunt.config.get("selenium_phantom_hub.options.port") %>/wd/hub',
   capabilities: {
     'browserName': 'phantomjs'
   },

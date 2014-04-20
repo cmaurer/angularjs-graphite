@@ -21,6 +21,33 @@
  * MM	Numeric month representation with leading zero
  * DD	Day of month with leading zero
  *
+ *
+ * w3
+ * http://www.w3.org/TR/NOTE-datetime
+ *   Year:
+ *     YYYY (eg 1997)
+ *    Year and month:
+ *     YYYY-MM (eg 1997-07)
+ *    Complete date:
+ *     YYYY-MM-DD (eg 1997-07-16)
+ *    Complete date plus hours and minutes:
+ *     YYYY-MM-DDThh:mmTZD (eg 1997-07-16T19:20+01:00)
+ *    Complete date plus hours, minutes and seconds:
+ *     YYYY-MM-DDThh:mm:ssTZD (eg 1997-07-16T19:20:30+01:00)
+ *    Complete date plus hours, minutes, seconds and a decimal fraction of a
+ *    second
+ *     YYYY-MM-DDThh:mm:ss.sTZD (eg 1997-07-16T19:20:30.45+01:00)
+ *
+ *   where:
+ *    YYYY = four-digit year
+ *    MM   = two-digit month (01=January, etc.)
+ *    DD   = two-digit day of month (01 through 31)
+ *    hh   = two digits of hour (00 through 23) (am/pm NOT allowed)
+ *    mm   = two digits of minute (00 through 59)
+ *    ss   = two digits of second (00 through 59)
+ *    s    = one or more digits representing a decimal fraction of a second
+ *    TZD  = time zone designator (Z or +hh:mm or -hh:mm)
+ *
  */
 var Parser = function(options) {
   'use strict';
@@ -37,6 +64,7 @@ var Parser = function(options) {
   this.hhMmYyMmDdRegEx = /(([012][0-9])\:([0-5][0-9])\_([0-3][0-9])([0-1][0-9])([0-3][0-9]))/;
   this.yyyyMmDdRegEx = /(([2][01][012][0-9])([01][0-9])([01][0-9]))/;
   this.mmDdYyRegEx = /([01][0-9])\/([0-3][0-9])\/([0123][0-9])/;
+  this.ISO_8601 = /^\s*((20[0-9]{2})\W([0]?[0-9]|1[012])\W([012]?[0-9]|3[01]))?\s?(([01]?[0-9]|2[0-3])\W([0-5][0-9])(\W([0-5][0-9]))?(\s*[AaPp][Mm])?)?\s*$/;
 };
 
 Parser.prototype = {
@@ -47,6 +75,8 @@ Parser.prototype = {
       return this.parseRelativeTime(value);
     } else if (this.relativeTimeNowRegEx.test(value)) {
       return new Date();
+    } else if (this.ISO_8601.test(value)) {
+      return this.parseAbsoluteTime(value);
     } else {
       return this.parseAbsoluteTime(value);
     }
@@ -96,17 +126,22 @@ Parser.prototype = {
     //try javascript default format last
     var arr, now = new Date();
     if(this.hhMmYyMmDdRegEx.test(value)) {
-      // ['20:00_140102', '20:00_140102', '20', '00', '14', '01', '02']
-      //          0             1           2     3    4     5     6
-      //                                  Hour Month  Year  Mnth  Day
-      //new Date(year, month, day, hour, minute, second, millisecond)
+      //HH:MM_YYmmDD
       arr = this.hhMmYyMmDdRegEx.exec(value);
       //this will never cause a bug!! :)
-      return new Date(+(2000 + (+arr[4])), (+arr[5] - 1), +arr[6], +arr[2], 0, 0, 0);
+      return new Date((2000 + (arr[4])), (+arr[5] - 1), +arr[6], +arr[2], 0, 0, 0);
     } else if (this.yyyyMmDdRegEx.test(value)){
-
-    } else if (this.mmDdYyRegEx.test(value)){
-
+      //YYYYMMDD
+      arr = this.yyyyMmDdRegEx.exec(value);
+      return new Date(+arr[2], (+arr[3] - 1), +arr[4], 0, 0, 0, 0);
+    } else if (this.mmDdYyRegEx.test(value)) {
+      //MM/DD/YY
+      arr = this.mmDdYyRegEx.exec(value);
+      return new Date((2000 + (arr[3])), (+arr[1] - 1), +arr[2], 0, 0, 0, 0);
+    } else if (this.ISO_8601.test(value)) {
+      //YYYY-MM-DD HH:MM:SS
+      arr = this.ISO_8601.exec(value);
+      return new Date(+arr[2], (+arr[3] - 1), +arr[4], +arr[6], +arr[7], +arr[9], 0);
     }
     return now;
   }
