@@ -55,7 +55,7 @@
     "coffeeson": "^0.1.0",
     "moment": "^2.5.1",
     "selenium-webdriver": "^2.40.0",
-    "protractor": "^0.21.0",
+    "protractor": "^0.22.0",
     "qs": "^0.6.6",
     "gitbook": "^0.2.0",
     "grunt-gitbook": "^0.2.0",
