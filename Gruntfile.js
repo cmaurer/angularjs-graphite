@@ -13,7 +13,7 @@ module.exports = function (grunt) {
       '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
       ' Licensed <%= pkg.license %> */\n',
     // Task configuration.
-    clean: ['dist/', 'coverage/', 'docs/', 'generated/', '_book'],
+    clean: ['dist/', 'coverage/', 'docs/', 'generated/', '_book', 'bower_components'],
     ngmin: {
       directives: {
         expand: true,
@@ -37,10 +37,10 @@ module.exports = function (grunt) {
       js: {
         src: [
           'generated/namespace.js',
-          'generated/services/graphite-date-parser-service.js',
           'generated/providers/graphite-api-provider.js',
           'generated/factories/graphite-api-format-factory.js',
           'generated/factories/graphite-api-target-factory.js',
+          'generated/services/graphite-date-parser-service.js',
           'generated/services/graphite-find-service.js'
         ],
         dest: 'dist/<%= pkg.name %>.js'
@@ -52,6 +52,19 @@ module.exports = function (grunt) {
         force: true
       },
       afterconcat: ['dist/angularjs-graphite.js']
+    },
+    bower: {
+      install: {
+        options: {
+          targetDir: './lib',
+          layout: 'byType',
+          install: true,
+          verbose: true,
+          cleanTargetDir: false,
+          cleanBowerDir: false,
+          bowerOptions: {}
+        }
+      }
     },
     karma: {
       unit: {
@@ -135,7 +148,7 @@ module.exports = function (grunt) {
     },
     selenium_phantom_hub: {
       options: {
-        timeout: 180,
+        timeout: 30,
         port: -1
       }
     },
@@ -190,7 +203,8 @@ module.exports = function (grunt) {
             baseUrl: 'http://localhost:<%= grunt.config.get("connect.www.options.port") %>',
             seleniumAddress: 'http://localhost:<%= grunt.config.get("selenium_phantom_hub.options.port") %>/wd/hub',
             capabilities: {
-              'browserName': 'phantomjs'
+              'browserName': 'phantomjs',
+              'phantomjs.cli.args': ['--ignore-ssl-errors=true',  '--web-security=false']
             },
             verbose: true,
             debug: true
@@ -221,18 +235,17 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-gitbook');
   grunt.loadNpmTasks('grunt-conventional-changelog');
   grunt.loadNpmTasks('grunt-port-pick');
+  grunt.loadNpmTasks('grunt-bower-task');
+
 
   // Default task.
   grunt.registerTask('default', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'karma:continuous']);
   grunt.registerTask('build', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'uglify']);
-
   grunt.registerTask('unit', ['karma:continuous']);
   grunt.registerTask('e2e', ['copy', 'portPick', 'selenium_phantom_hub', 'connect', 'protractor', 'selenium_stop']);
-
   grunt.registerTask('docs', ['clean', 'ngmin', 'concat', 'ngdocs']);
-
-  grunt.registerTask('travis', ['build', 'unit', 'coveralls']);
-  grunt.registerTask('all', ['build', 'unit', 'e2e']);
+  grunt.registerTask('travis', ['build', 'bower:install', 'unit', 'coveralls', 'e2e']);
+  grunt.registerTask('all', ['build', 'bower:install', 'unit', 'e2e']);
 
 
 };

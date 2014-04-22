@@ -4,8 +4,8 @@ module.exports = function ( karma ) {
   karma.set({
     basePath: '.',
     files: [
-      "http://code.angularjs.org/1.2.15/angular.js",
-      "http://code.angularjs.org/1.2.15/angular-mocks.js",
+      "lib/angular/angular.js",
+      "lib/angular-mocks/angular-mocks.js",
       "dist/angularjs-graphite.js",
       "test/**/*spec.js"
     ],
@@ -25,6 +25,9 @@ module.exports = function ( karma ) {
     autoWatch: false,
     browsers: [
       'PhantomJS'
-    ]
+    ],
+    client: {
+      args: ['--web-security', 'false']
+    }
   });
 };

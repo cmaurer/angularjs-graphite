@@ -1,4 +1,4 @@
-/*! angularjs-graphite - v0.0.0 - 2014-04-19
+/*! angularjs-graphite - v0.0.0 - 2014-04-22
  * Copyright (c) 2014 ; Licensed Apache License, v2.0 */
 window.ngGraphite = {};
 window.ngGraphite.i18n = {};
@@ -13,96 +13,6 @@ angular.module( 'ngGraphite', [
   'ngGraphite.services'
 ] ); //, 'ngGraphite.directives', 'ngGraphite.filters'
 
-var Parser = function ( options ) {
-  'use strict';
-  this.options = options;
-  this.relativeTimeRegEx = /((\-)([0-9]*)(s|min|h|d|w|mon|y))/;
-  this.secondRegEx = /(s)/;
-  this.minuteRegEx = /(m[in])/;
-  this.hourRegEx = /(h)/;
-  this.dayRegEx = /(d)/;
-  this.weekRegEx = /(w)/;
-  this.monthRegEx = /(m[on])/;
-  this.yearRegEx = /(y)/;
-  this.relativeTimeNowRegEx = /(now)/;
-  this.hhMmYyMmDdRegEx = /(([012][0-9])\:([0-5][0-9])\_([0-3][0-9])([0-1][0-9])([0-3][0-9]))/;
-  this.yyyyMmDdRegEx = /(([2][01][012][0-9])([01][0-9])([01][0-9]))/;
-  this.mmDdYyRegEx = /([01][0-9])\/([0-3][0-9])\/([0123][0-9])/;
-  this.ISO_8601 = /^\s*((20[0-9]{2})\W([0]?[0-9]|1[012])\W([012]?[0-9]|3[01]))?\s?(([01]?[0-9]|2[0-3])\W([0-5][0-9])(\W([0-5][0-9]))?(\s*[AaPp][Mm])?)?\s*$/;
-};
-Parser.prototype = {
-  constructor: Parser,
-  parse: function ( value ) {
-    'use strict';
-    if ( this.relativeTimeRegEx.test( value ) ) {
-      return this.parseRelativeTime( value );
-    } else if ( this.relativeTimeNowRegEx.test( value ) ) {
-      return new Date();
-    } else if ( this.ISO_8601.test( value ) ) {
-      return this.parseAbsoluteTime( value );
-    } else {
-      return this.parseAbsoluteTime( value );
-    }
-  },
-  parseRelativeTime: function ( value ) {
-    'use strict';
-    var arr = this.relativeTimeRegEx.exec( value ),
-      timeLength, timeUnit, now = new Date();
-    if ( arr !== null ) {
-      timeLength = +arr[ 3 ];
-      timeUnit = arr[ 4 ];
-      if ( this.secondRegEx.test( timeUnit ) ) {
-        return new Date( now.getTime() - timeLength * 1000 );
-      } else if ( this.minuteRegEx.test( timeUnit ) ) {
-        return new Date( now.getTime() - timeLength * 60000 );
-      } else if ( this.hourRegEx.test( timeUnit ) ) {
-        return new Date( now.getTime() - timeLength * 3600000 );
-      } else if ( this.dayRegEx.test( timeUnit ) ) {
-        return new Date( now.getTime() - timeLength * 86400000 );
-      } else if ( this.weekRegEx.test( timeUnit ) ) {
-        return new Date( now.getTime() - timeLength * 604800000 );
-      } else if ( this.monthRegEx.test( timeUnit ) ) {
-        return new Date( now.getTime() - timeLength * 2629740000 );
-      } else if ( this.yearRegEx.test( timeUnit ) ) {
-        return new Date( now.getTime() - timeLength * 31556900000 );
-      }
-    }
-    return now;
-  },
-  parseAbsoluteTime: function ( value ) {
-    'use strict';
-    //try known formats
-    //try javascript default format last
-    var arr, now = new Date();
-    if ( this.hhMmYyMmDdRegEx.test( value ) ) {
-      //HH:MM_YYmmDD
-      arr = this.hhMmYyMmDdRegEx.exec( value );
-      //this will never cause a bug!! :)
-      return new Date( 2000 + arr[ 4 ], +arr[ 5 ] - 1, +arr[ 6 ], +arr[ 2 ], 0, 0, 0 );
-    } else if ( this.yyyyMmDdRegEx.test( value ) ) {
-      //YYYYMMDD
-      arr = this.yyyyMmDdRegEx.exec( value );
-      return new Date( +arr[ 2 ], +arr[ 3 ] - 1, +arr[ 4 ], 0, 0, 0, 0 );
-    } else if ( this.mmDdYyRegEx.test( value ) ) {
-      //MM/DD/YY
-      arr = this.mmDdYyRegEx.exec( value );
-      return new Date( 2000 + arr[ 3 ], +arr[ 1 ] - 1, +arr[ 2 ], 0, 0, 0, 0 );
-    } else if ( this.ISO_8601.test( value ) ) {
-      //YYYY-MM-DD HH:MM:SS
-      arr = this.ISO_8601.exec( value );
-      return new Date( +arr[ 2 ], +arr[ 3 ] - 1, +arr[ 4 ], +arr[ 6 ], +arr[ 7 ], +arr[ 9 ], 0 );
-    }
-    return now;
-  }
-};
-/**
- * @ngdoc
- * @name ngGraphite.services.GraphiteDateParser
- */
-ngGraphiteServices.factory( 'GraphiteDateParser', function () {
-  'use strict';
-  return new Parser( {} );
-} );
 /**
  * @ngdoc provider
  */
@@ -422,6 +332,100 @@ ngGraphiteFactories.factory( 'GraphiteTargetBuilder', function () {
       return [];
     }
   };
+} );
+var Parser = function ( options ) {
+  'use strict';
+  this.options = options;
+  this.relativeTimeRegEx = /((\-)([0-9]*)(s|min|h|d|w|mon|y))/;
+  this.secondRegEx = /(s)/;
+  this.minuteRegEx = /(m[in])/;
+  this.hourRegEx = /(h)/;
+  this.dayRegEx = /(d)/;
+  this.weekRegEx = /(w)/;
+  this.monthRegEx = /(m[on])/;
+  this.yearRegEx = /(y)/;
+  this.relativeTimeNowRegEx = /(now)/;
+  this.hhMmYyMmDdRegEx = /(([012][0-9])\:([0-5][0-9])\_([0-3][0-9])([0-1][0-9])([0-3][0-9]))/;
+  this.yyyyMmDdRegEx = /(([2][01][012][0-9])([01][0-9])([01][0-9]))/;
+  this.mmDdYyRegEx = /([01][0-9])\/([0-3][0-9])\/([0123][0-9])/;
+  this.ISO_8601 = /^\s*((20[0-9]{2})\W([0]?[0-9]|1[012])\W([012]?[0-9]|3[01]))?\s?(([01]?[0-9]|2[0-3])\W([0-5][0-9])(\W([0-5][0-9]))?(\s*[AaPp][Mm])?)?\s*$/;
+};
+Parser.prototype = {
+  constructor: Parser,
+  parse: function ( value ) {
+    'use strict';
+    if ( this.relativeTimeRegEx.test( value ) ) {
+      return this.parseRelativeTime( value );
+    } else if ( this.relativeTimeNowRegEx.test( value ) ) {
+      return new Date();
+    } else if ( this.ISO_8601.test( value ) ) {
+      return this.parseAbsoluteTime( value );
+    } else {
+      return this.parseAbsoluteTime( value );
+    }
+  },
+  parseRelativeTime: function ( value ) {
+    'use strict';
+    var arr = this.relativeTimeRegEx.exec( value ),
+      timeLength, timeUnit, now = new Date();
+    if ( arr !== null ) {
+      timeLength = +arr[ 3 ];
+      timeUnit = arr[ 4 ];
+      if ( this.secondRegEx.test( timeUnit ) ) {
+        return new Date( now.getTime() - timeLength * 1000 );
+      } else if ( this.minuteRegEx.test( timeUnit ) ) {
+        return new Date( now.getTime() - timeLength * 60000 );
+      } else if ( this.hourRegEx.test( timeUnit ) ) {
+        return new Date( now.getTime() - timeLength * 3600000 );
+      } else if ( this.dayRegEx.test( timeUnit ) ) {
+        return new Date( now.getTime() - timeLength * 86400000 );
+      } else if ( this.weekRegEx.test( timeUnit ) ) {
+        return new Date( now.getTime() - timeLength * 604800000 );
+      } else if ( this.monthRegEx.test( timeUnit ) ) {
+        return new Date( now.getTime() - timeLength * 2629740000 );
+      } else if ( this.yearRegEx.test( timeUnit ) ) {
+        return new Date( now.getTime() - timeLength * 31556900000 );
+      }
+    }
+    return now;
+  },
+  parseAbsoluteTime: function ( value ) {
+    'use strict';
+    //try known formats
+    //try javascript default format last
+    var arr, now = new Date();
+    if ( this.hhMmYyMmDdRegEx.test( value ) ) {
+      //HH:MM_YYmmDD
+      arr = this.hhMmYyMmDdRegEx.exec( value );
+      //this will never cause a bug!! :)
+      return new Date( +arr[ 4 ] + 2000, +arr[ 5 ] - 1, +arr[ 6 ], +arr[ 2 ], 0, 0, 0 );
+    } else if ( this.yyyyMmDdRegEx.test( value ) ) {
+      //YYYYMMDD
+      arr = this.yyyyMmDdRegEx.exec( value );
+      return new Date( +arr[ 2 ], +arr[ 3 ] - 1, +arr[ 4 ], 0, 0, 0, 0 );
+    } else if ( this.mmDdYyRegEx.test( value ) ) {
+      //MM/DD/YY
+      arr = this.mmDdYyRegEx.exec( value );
+      return new Date( +arr[ 3 ] + 2000, +arr[ 1 ] - 1, +arr[ 2 ], 0, 0, 0, 0 );
+    } else if ( this.ISO_8601.test( value ) ) {
+      //YYYY-MM-DD HH:MM:SS
+      arr = this.ISO_8601.exec( value );
+      console.log( 'ISO_8601', arr, new Date( +arr[ 2 ], +arr[ 3 ] - 1, +arr[ 4 ], +arr[ 6 ], +arr[ 7 ], +arr[ 9 ], 0 ) );
+      //['2014-01-02 20:21:22', '2014-01-02', '2014', '01', '02', '20:21:22', '20', '21', ':22', '22', undefined]
+      //        0                   1           2       3     4       5         6     7     8     9     10
+      //new Date(year, month, day, hour, minute, second, millisecond);
+      return new Date( +arr[ 2 ], +arr[ 3 ] - 1, +arr[ 4 ], +arr[ 6 ], +arr[ 7 ], +arr[ 9 ], 0 );
+    }
+    return now;
+  }
+};
+/**
+ * @ngdoc
+ * @name ngGraphite.services.GraphiteDateParser
+ */
+ngGraphiteServices.factory( 'GraphiteDateParser', function () {
+  'use strict';
+  return new Parser( {} );
 } );
 ngGraphiteServices.factory( 'GraphiteService', [
   '$q',

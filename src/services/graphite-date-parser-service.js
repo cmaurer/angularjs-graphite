@@ -129,7 +129,7 @@ Parser.prototype = {
       //HH:MM_YYmmDD
       arr = this.hhMmYyMmDdRegEx.exec(value);
       //this will never cause a bug!! :)
-      return new Date((2000 + (arr[4])), (+arr[5] - 1), +arr[6], +arr[2], 0, 0, 0);
+      return new Date(((+arr[4]) + 2000), (+arr[5] - 1), +arr[6], +arr[2], 0, 0, 0);
     } else if (this.yyyyMmDdRegEx.test(value)){
       //YYYYMMDD
       arr = this.yyyyMmDdRegEx.exec(value);
@@ -137,10 +137,15 @@ Parser.prototype = {
     } else if (this.mmDdYyRegEx.test(value)) {
       //MM/DD/YY
       arr = this.mmDdYyRegEx.exec(value);
-      return new Date((2000 + (arr[3])), (+arr[1] - 1), +arr[2], 0, 0, 0, 0);
+      return new Date(((+arr[3]) + 2000), (+arr[1] - 1), +arr[2], 0, 0, 0, 0);
     } else if (this.ISO_8601.test(value)) {
       //YYYY-MM-DD HH:MM:SS
       arr = this.ISO_8601.exec(value);
+      console.log('ISO_8601', arr, new Date(+arr[2], (+arr[3] - 1), +arr[4], +arr[6], +arr[7], +arr[9], 0));
+      //['2014-01-02 20:21:22', '2014-01-02', '2014', '01', '02', '20:21:22', '20', '21', ':22', '22', undefined]
+      //        0                   1           2       3     4       5         6     7     8     9     10
+      //new Date(year, month, day, hour, minute, second, millisecond);
+
       return new Date(+arr[2], (+arr[3] - 1), +arr[4], +arr[6], +arr[7], +arr[9], 0);
     }
     return now;
