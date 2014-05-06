@@ -1,4 +1,4 @@
-/*! angularjs-graphite - v0.0.0 - 2014-04-22
+/*! angularjs-graphite - v0.0.0 - 2014-05-06
  * Copyright (c) 2014 ; Licensed Apache License, v2.0 */
 window.ngGraphite = {};
 window.ngGraphite.i18n = {};

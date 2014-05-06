@@ -1,6 +1,7 @@
 language: node_js
 node_js:
-  - "0.10.x"
+  - "0.10"
+  - "0.11"
 
 before_script:
   - export DISPLAY=:99.0
@@ -10,4 +11,5 @@ before_script:
   - npm install --quiet -g karma
   - ./scripts/web-server.js > /dev/null &
   - sleep 1 # give server time to start
+
 script: "grunt travis --verbose"
