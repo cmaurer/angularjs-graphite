@@ -128,7 +128,7 @@ module.exports = function (grunt) {
     },
     portPick: {
       options: {
-        port: 7654
+        port: 3654
       },
       selenium_phantom_hub:{
         targets: [
